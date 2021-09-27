@@ -13,12 +13,12 @@ namespace Chess.DAL.Configurations.Interfaces
 
         string ChatMessagesCollectionName { get; set; }
 
-        string LobbyCollectionName { get; set; }
+        string LobbiesCollectionName { get; set; }
 
-        string LobbyConfigurationCollectionName { get; set; }
+        string LobbyConfigCollectionName { get; set; }
 
-        string VoteCollectionName { get; set; }
+        string VotesCollectionName { get; set; }
 
-        string MoveCollectionName { get; set; }
+        string MovesCollectionName { get; set; }
     }
 }

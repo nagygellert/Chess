@@ -1,4 +1,5 @@
-﻿using Chess.DAL.Repositories.Interfaces;
+﻿using Chess.DAL.Configurations.Interfaces;
+using Chess.DAL.Repositories.Interfaces;
 using Chess.Models.Entities;
 using MongoDB.Driver;
 using System;
@@ -13,9 +14,12 @@ namespace Chess.DAL.Repositories.Services
     {
         private IMongoCollection<LobbyConfig> _lobbyConfigCollection;
 
-        public LobbyConfigRepository(IMongoCollection<LobbyConfig> lobbyConfigCollection)
+        public LobbyConfigRepository(IChessDatabaseSettings databaseSettings)
         {
-            _lobbyConfigCollection = lobbyConfigCollection;
+            var client = new MongoClient(databaseSettings.ConnectionString);
+            var database = client.GetDatabase(databaseSettings.DatabaseName);
+
+            _lobbyConfigCollection = database.GetCollection<LobbyConfig>(databaseSettings.LobbyConfigCollectionName);
         }
 
         public async Task<LobbyConfig> GetLobbyConfig(string id)

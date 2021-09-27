@@ -17,6 +17,16 @@ namespace Chess.BLL.MapperProfiles
                 .ForMember(x => x.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
             CreateMap<ChatMessage, ChatMessageDTO>()
                 .ForMember(x => x.TimeStamp, opt => opt.MapFrom(src => src.CreatedAt));
+            CreateMap<MoveDTO, Move>()
+                .ForMember(x => x.MovedTo, opt => opt.MapFrom(src => src.To))
+                .ForMember(x => x.CurrentLocation, opt => opt.MapFrom(src => src.From))
+                .ReverseMap();
+            CreateMap<VoteDTO, Vote>()
+                .ReverseMap();
+            CreateMap<TableSpaceDTO, TableSpace>()
+                .ReverseMap();
+            CreateMap<PieceLocationDTO, PieceLocation>()
+                .ReverseMap();
         }
     }
 }

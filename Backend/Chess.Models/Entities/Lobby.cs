@@ -10,7 +10,7 @@ namespace Chess.Models.Entities
     {
         public LobbyConfig Config { get; set; }
 
-        public TableSpace[] Tiles { get; set; }
+        public PieceLocation[] Tiles { get; set; }
 
         public string[] MoveIds { get; set; }
     }

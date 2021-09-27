@@ -40,6 +40,13 @@ namespace Chess
                         sp.GetRequiredService<IOptions<ChessDatabaseSettings>>().Value);
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<ILobbyConfigRepository, LobbyConfigRepository>();
+            services.AddTransient<ILobbyRepository, LobbyRepository>();
+            services.AddTransient<IMoveRepository, MoveRepository>();
+            services.AddTransient<IVoteRepository, VoteRepository>();
+            services.AddTransient<ILobbyService, LobbyService>();
+            services.AddTransient<IMoveService, MoveService>();
+            services.AddTransient<IVoteService, VoteService>();
             services.AddAutoMapper(typeof(ChessProfile));
 
             services.AddControllers();
