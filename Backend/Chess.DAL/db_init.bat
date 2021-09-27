@@ -1,0 +1,1 @@
+mongosh Chess < db_script.js

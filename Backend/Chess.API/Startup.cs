@@ -1,4 +1,5 @@
 using Chess.BLL.Interfaces;
+using Chess.BLL.MapperProfiles;
 using Chess.BLL.Services;
 using Chess.DAL.Configurations.Interfaces;
 using Chess.DAL.Configurations.Services;
@@ -39,6 +40,7 @@ namespace Chess
                         sp.GetRequiredService<IOptions<ChessDatabaseSettings>>().Value);
             services.AddTransient<IChatRepository, ChatRepository>();
             services.AddTransient<IChatService, ChatService>();
+            services.AddAutoMapper(typeof(ChessProfile));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

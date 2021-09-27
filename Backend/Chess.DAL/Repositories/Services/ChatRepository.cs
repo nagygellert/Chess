@@ -1,5 +1,5 @@
 ﻿using Chess.DAL.Configurations.Interfaces;
-using Chess.DAL.Models;
+using Chess.Models.Entities;
 using Chess.DAL.Repositories.Interfaces;
 using MongoDB.Driver;
 using System;
@@ -24,6 +24,11 @@ namespace Chess.DAL.Repositories.Services
 
         public async Task<IEnumerable<ChatMessage>> GetAllAsync() =>
             await _chatMessages.Find(_ => true).ToListAsync();
+
+        public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyId)
+        {
+            return await _chatMessages.Find(msg => !msg.IsDeleted && msg.LobbyId == lobbyId).ToListAsync();
+        }
 
         public async Task<ChatMessage> GetOneAsync(string id) =>
             await _chatMessages.Find(msg => msg.Id == id).FirstOrDefaultAsync();

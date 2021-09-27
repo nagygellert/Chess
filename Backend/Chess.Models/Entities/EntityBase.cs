@@ -2,17 +2,17 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace Chess.DAL.Models
+namespace Chess.Models.Entities
 {
-    public class ChatMessage
+    public class EntityBase
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string Text { get; set; }
-
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        public DateTime TimeStamp { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

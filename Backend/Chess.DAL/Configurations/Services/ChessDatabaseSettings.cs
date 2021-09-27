@@ -13,5 +13,13 @@ namespace Chess.DAL.Configurations.Services
         public string DatabaseName { get; set; }
 
         public string ChatMessagesCollectionName { get; set; }
+
+        public string LobbyCollectionName { get; set; }
+
+        public string LobbyConfigurationCollectionName { get; set; }
+
+        public string VoteCollectionName { get; set; }
+
+        public string MoveCollectionName { get; set; }
     }
 }

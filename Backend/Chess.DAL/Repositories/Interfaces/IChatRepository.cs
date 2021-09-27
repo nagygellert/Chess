@@ -1,4 +1,4 @@
-﻿using Chess.DAL.Models;
+﻿using Chess.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,8 @@ namespace Chess.DAL.Repositories.Interfaces
     public interface IChatRepository
     {
         Task<IEnumerable<ChatMessage>> GetAllAsync();
+
+        Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyId);
 
         Task<ChatMessage> GetOneAsync(string id);
 
