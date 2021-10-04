@@ -36,9 +36,9 @@ namespace Chess.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string text)
+        public async Task<IActionResult> Post(ChatMessageDTO message)
         {
-            var msg = await _chatService.InsertAsync(text);
+            var msg = await _chatService.InsertAsync(message);
             return Ok(msg);
         }
 

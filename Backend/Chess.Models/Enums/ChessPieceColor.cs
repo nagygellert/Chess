@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Models.Enums
 {
-    public enum ChessPiece
+    public enum ChessPieceColor
     {
-        Pawn,
-        Bishop,
-        Knight,
-        Rook,
-        Queen,
-        King
+        White,
+        Black
     }
 }

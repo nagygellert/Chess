@@ -1,3 +1,4 @@
+using Chess.API.Hubs;
 using Chess.BLL.Interfaces;
 using Chess.BLL.MapperProfiles;
 using Chess.BLL.Services;
@@ -36,6 +37,18 @@ namespace Chess
         {
             services.Configure<ChessDatabaseSettings>(Configuration.GetSection(nameof(ChessDatabaseSettings)));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "ChessAngular",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200")
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader()
+                                      .AllowCredentials();
+                                  });
+            });
+
             services.AddSingleton<IChessDatabaseSettings>(sp =>
                         sp.GetRequiredService<IOptions<ChessDatabaseSettings>>().Value);
             services.AddTransient<IChatRepository, ChatRepository>();
@@ -48,6 +61,8 @@ namespace Chess
             services.AddTransient<IMoveService, MoveService>();
             services.AddTransient<IVoteService, VoteService>();
             services.AddAutoMapper(typeof(ChessProfile));
+
+            services.AddSignalR();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -70,11 +85,14 @@ namespace Chess
 
             app.UseRouting();
 
+            app.UseCors("ChessAngular");
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/hub");
             });
         }
     }

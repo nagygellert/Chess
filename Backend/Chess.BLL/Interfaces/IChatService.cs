@@ -13,7 +13,7 @@ namespace Chess.BLL.Interfaces
 
         Task<ChatMessageDTO> GetAsync(string id);
 
-        Task<ChatMessageDTO> InsertAsync(string text);
+        Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage);
 
         Task RemoveAsync(string id);
     }

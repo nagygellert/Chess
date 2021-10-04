@@ -7,31 +7,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Chess.BLL.Services
 {
     public class ChatService : IChatService
     {
         private readonly IChatRepository _chatRepository;
+        private readonly IMapper _mapper;
 
-        public ChatService(IChatRepository chatRepository)
+        public ChatService(IChatRepository chatRepository, IMapper mapper)
         {
             _chatRepository = chatRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ChatMessageDTO>> GetAsync() =>
-            (await _chatRepository.GetAllAsync()).Select(msg => new ChatMessageDTO { Id = msg.Id, Text = msg.Text, TimeStamp = msg.CreatedAt });
+        public async Task<IEnumerable<ChatMessageDTO>> GetAsync()
+        {
+            var messages = await _chatRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
+        }
 
         public async Task<ChatMessageDTO> GetAsync(string id) 
         {
             var msg = await _chatRepository.GetOneAsync(id);
-            return new ChatMessageDTO { Id = msg.Id, Text = msg.Text, TimeStamp = msg.CreatedAt };
+            return _mapper.Map<ChatMessageDTO>(msg);
         }
 
-        public async Task<ChatMessageDTO> InsertAsync(string text)
+        public async Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage)
         {
-            var inserted = await _chatRepository.InsertOneAsync(new ChatMessage {Text = text, CreatedAt = DateTime.Now });
-            return new ChatMessageDTO { Id = inserted.Id, Text = inserted.Text, TimeStamp = inserted.CreatedAt };
+            var inserted = await _chatRepository.InsertOneAsync(_mapper.Map<ChatMessage>(chatMessage));
+            return _mapper.Map<ChatMessageDTO>(inserted);
         }
 
         public async Task RemoveAsync(string id) =>

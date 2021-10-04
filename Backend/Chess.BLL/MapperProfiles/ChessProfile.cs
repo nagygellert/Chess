@@ -13,10 +13,10 @@ namespace Chess.BLL.MapperProfiles
     {
         public ChessProfile()
         {
-            CreateMap<ChatMessageDTO, ChatMessage>()
-                .ForMember(x => x.CreatedAt, opt => opt.MapFrom(_ => DateTime.Now));
             CreateMap<ChatMessage, ChatMessageDTO>()
-                .ForMember(x => x.TimeStamp, opt => opt.MapFrom(src => src.CreatedAt));
+                .ForMember(x => x.TimeStamp, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.User))
+                .ReverseMap();
             CreateMap<MoveDTO, Move>()
                 .ForMember(x => x.MovedTo, opt => opt.MapFrom(src => src.To))
                 .ForMember(x => x.CurrentLocation, opt => opt.MapFrom(src => src.From))
