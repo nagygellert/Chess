@@ -1,46 +1,44 @@
-﻿using Chess.DAL.Configurations.Interfaces;
-using Chess.Models.Entities;
+﻿using Chess.Models.Entities;
 using Chess.DAL.Repositories.Interfaces;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chess.DAL.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chess.DAL.Repositories.Services
 {
     public class ChatRepository : IChatRepository
     {
-        private readonly IMongoCollection<ChatMessage> _chatMessages;
+        private readonly ChessDbContext _chessDbContext;
 
-        public ChatRepository(IChessDatabaseSettings databaseSettings)
+        public ChatRepository(ChessDbContext chessDbContext)
         {
-            var client = new MongoClient(databaseSettings.ConnectionString);
-            var database = client.GetDatabase(databaseSettings.DatabaseName);
-
-            _chatMessages = database.GetCollection<ChatMessage>(databaseSettings.ChatMessagesCollectionName);
+            _chessDbContext = chessDbContext;
         }
 
-        public async Task<IEnumerable<ChatMessage>> GetAllAsync() =>
-            await _chatMessages.Find(_ => true).ToListAsync();
+        public async Task<IEnumerable<ChatMessage>> GetAllAsync()   
+            => await _chessDbContext.ChatMessages.Include(msg => msg.User).ToListAsync();
 
-        public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyId)
-        {
-            return await _chatMessages.Find(msg => !msg.IsDeleted && msg.LobbyId == lobbyId).ToListAsync();
-        }
+        public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(Guid lobbyId)  
+            => await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Id == lobbyId).ToListAsync();
 
-        public async Task<ChatMessage> GetOneAsync(string id) =>
-            await _chatMessages.Find(msg => msg.Id == id).FirstOrDefaultAsync();
+        public async Task<ChatMessage> GetOneAsync(Guid id) 
+            => await _chessDbContext.ChatMessages.FindAsync(id);
         
-
         public async Task<ChatMessage> InsertOneAsync(ChatMessage msg)
         {
-            await _chatMessages.InsertOneAsync(msg);
+            await _chessDbContext.ChatMessages.AddAsync(msg);
+            await _chessDbContext.SaveChangesAsync();
             return msg;
         }
 
-        public Task RemoveOneAsync(string id) =>
-            _chatMessages.DeleteOneAsync(msg => msg.Id == id);
+        public async Task RemoveOneAsync(Guid id)
+        {
+            var messageToDelete = await _chessDbContext.ChatMessages.FindAsync(id);
+            _chessDbContext.ChatMessages.Remove(messageToDelete);
+        } 
     }
 }

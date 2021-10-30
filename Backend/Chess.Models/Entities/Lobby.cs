@@ -8,10 +8,8 @@ namespace Chess.Models.Entities
 {
     public class Lobby : EntityBase
     {
-        public LobbyConfig Config { get; set; }
+        public LobbyConfig LobbyConfig { get; set; }
 
-        public PieceLocation[] Tiles { get; set; }
-
-        public string[] MoveIds { get; set; }
+        public IEnumerable<PieceLocation> Tiles { get; set; }
     }
 }

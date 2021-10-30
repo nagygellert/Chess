@@ -20,7 +20,7 @@ namespace Chess.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(string id, VoteDTO vote)
+        public async Task<IActionResult> Post(Guid id, VoteDTO vote)
         {
             var allMsg = await _voteService.InsertVote(id, vote);
             return Ok(allMsg);
@@ -28,7 +28,7 @@ namespace Chess.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var msg = await _voteService.GetVotesForLobby(id);
             return Ok(msg);

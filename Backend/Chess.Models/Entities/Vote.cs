@@ -12,6 +12,8 @@ namespace Chess.Models.Entities
 
         public int Round { get; set; }
 
-        public string LobbyId { get; set; }
+        public Lobby Lobby { get; set; }
+
+        public UserBase User { get; set; }
     }
 }

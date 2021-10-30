@@ -1,9 +1,9 @@
-using Chess.API.Hubs;
+using Chess.API.SignalRHubs;
 using Chess.BLL.Interfaces;
 using Chess.BLL.MapperProfiles;
 using Chess.BLL.Services;
-using Chess.DAL.Configurations.Interfaces;
-using Chess.DAL.Configurations.Services;
+using Chess.DAL.Contexts;
+
 using Chess.DAL.Repositories.Interfaces;
 using Chess.DAL.Repositories.Services;
 using Microsoft.AspNetCore.Builder;
@@ -15,11 +15,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Chess.API.Helpers;
 
 namespace Chess
 {
@@ -35,32 +38,44 @@ namespace Chess
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ChessDatabaseSettings>(Configuration.GetSection(nameof(ChessDatabaseSettings)));
-
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "ChessAngular",
                                   builder =>
                                   {
-                                      builder.WithOrigins("http://localhost:4200")
+                                      builder.WithOrigins(Configuration.GetSection("AngularClient")["Url"])
                                       .AllowAnyMethod()
                                       .AllowAnyHeader()
                                       .AllowCredentials();
                                   });
             });
 
-            services.AddSingleton<IChessDatabaseSettings>(sp =>
-                        sp.GetRequiredService<IOptions<ChessDatabaseSettings>>().Value);
-            services.AddTransient<IChatRepository, ChatRepository>();
-            services.AddTransient<IChatService, ChatService>();
-            services.AddTransient<ILobbyConfigRepository, LobbyConfigRepository>();
-            services.AddTransient<ILobbyRepository, LobbyRepository>();
-            services.AddTransient<IMoveRepository, MoveRepository>();
-            services.AddTransient<IVoteRepository, VoteRepository>();
-            services.AddTransient<ILobbyService, LobbyService>();
-            services.AddTransient<IMoveService, MoveService>();
-            services.AddTransient<IVoteService, VoteService>();
+            services.AddDbContext<ChessDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("ChessDatabase")));
+
+            services.AddChessServices();
+
             services.AddAutoMapper(typeof(ChessProfile));
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = Configuration.GetSection("IdentityServer")["Url"];
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
+
+            // adds an authorization policy to make sure the token is for scope 'api1'
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiScope", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "chessAPI");
+                });
+            });
 
             services.AddSignalR();
 
@@ -86,6 +101,8 @@ namespace Chess
             app.UseRouting();
 
             app.UseCors("ChessAngular");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

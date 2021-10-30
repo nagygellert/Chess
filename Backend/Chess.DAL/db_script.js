@@ -1,5 +1,0 @@
-db.createCollection("Votes")
-db.createCollection("Lobbies")
-db.createCollection("LobbyConfigs")
-db.createCollection("Moves")
-db.createCollection("ChatMessages")

@@ -9,7 +9,7 @@ namespace Chess.DAL.Repositories.Interfaces
 {
     public interface IMoveRepository
     {
-        Task<Move> GetMove(string id);
+        Task<Move> GetMove(Guid id);
 
         Task<Move> InsertMove(Move move);
     }

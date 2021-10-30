@@ -9,6 +9,10 @@ namespace Chess.Models.Entities
 {
     public class Move : PieceLocation
     {
-        public TableSpace MovedTo { get; set; }
+        public TableColumn NewColumn { get; set; }
+
+        public int NewRow { get; set; }
+
+        public UserBase User { get; set; }
     }
 }

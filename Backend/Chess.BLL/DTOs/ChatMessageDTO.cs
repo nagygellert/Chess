@@ -8,11 +8,11 @@ namespace Chess.BLL.DTOs
 {
     public class ChatMessageDTO
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Text { get; set; }
 
-        public string UserName { get; set; }
+        public UserDTO User { get; set; }
 
         public DateTime TimeStamp { get; set; }
     }

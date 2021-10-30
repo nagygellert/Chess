@@ -11,12 +11,12 @@ namespace Chess.DAL.Repositories.Interfaces
     {
         Task<IEnumerable<ChatMessage>> GetAllAsync();
 
-        Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyId);
+        Task<IEnumerable<ChatMessage>> GetMessagesForLobby(Guid lobbyId);
 
-        Task<ChatMessage> GetOneAsync(string id);
+        Task<ChatMessage> GetOneAsync(Guid id);
 
         Task<ChatMessage> InsertOneAsync(ChatMessage msg);
 
-        Task RemoveOneAsync(string id);
+        Task RemoveOneAsync(Guid id);
     }
 }

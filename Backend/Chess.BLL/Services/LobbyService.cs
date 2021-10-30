@@ -24,25 +24,25 @@ namespace Chess.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PieceLocationDTO>> GetTableState(string lobbyId)
+        public async Task<IEnumerable<PieceLocationDTO>> GetTableState(Guid lobbyId)
         {
             var state = await _lobbyRepository.GetTableState(lobbyId);
             return _mapper.Map<IEnumerable<PieceLocationDTO>>(state);
         }
 
-        public async Task<string> CreateLobby()
+        public async Task<Guid> CreateLobby()
         {
             var insertedLobby = await _lobbyRepository.InsertLobby(new Lobby { });
             return insertedLobby.Id;
         }
 
-        public async Task InsertMove(string lobbyId, MoveDTO move)
+        public async Task InsertMove(Guid lobbyId, MoveDTO move)
         {
             var insertedMove = await _moveRepository.InsertMove(_mapper.Map<Move>(move));
             await _lobbyRepository.InsertMoveReference(lobbyId, insertedMove.Id);
         }
 
-        public async Task DeleteLobby(string lobbyId)
+        public async Task DeleteLobby(Guid lobbyId)
         {
             await _lobbyRepository.DeleteLobby(lobbyId);
         }

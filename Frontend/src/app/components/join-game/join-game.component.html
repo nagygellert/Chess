@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-center">
+<mat-card class="d-flex justify-content-center align-items-center flex-column ">
+    <mat-card-title>Join an existing lobby</mat-card-title>
+    <mat-card-content class="p-3">
+        <form #joinLobby='ngForm' (ngSubmit)="onSubmit()">
+            <div>
+                <mat-form-field appearance="fill">
+                    <input matInput [(ngModel)]='this.username' name='username' type="text" minlength="1" maxlength="50" placeholder="Enter username" required>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <input matInput [(ngModel)]='this.roomCode' name='roomCode' type="number" minlength="4" maxlength="4" placeholder="Enter room code" required>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-select required [(value)]='this.selectedSide' name='selectedSide'>
+                        <mat-option value="1">White</mat-option>
+                        <mat-option value="2">Black</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <button mat-raised-button color="primary" type="submit">Join game</button>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+
+    </mat-card-actions>
+</mat-card>
+</div>

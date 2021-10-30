@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  chessApiUrl: 'https://localhost:44325',
+  identityServerUrl: 'https://localhost:44365'
 };
 
 /*

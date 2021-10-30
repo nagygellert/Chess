@@ -9,14 +9,14 @@ namespace Chess.DAL.Repositories.Interfaces
 {
     public interface ILobbyRepository
     {
-        Task<IEnumerable<PieceLocation>> GetTableState(string lobbyId);
+        Task<IEnumerable<PieceLocation>> GetTableState(Guid lobbyId);
 
         Task<Lobby> InsertLobby(Lobby lobby);
 
-        Task<Lobby> InsertMoveReference(string lobbyId, string moveId);
+        Task<Lobby> InsertMoveReference(Guid lobbyId, Guid moveId);
 
-        Task<Lobby> UpdateLobby(string lobbyId, Lobby lobby);
+        Lobby UpdateLobby(Lobby lobby);
 
-        Task DeleteLobby(string lobbyId);
+        Task DeleteLobby(Guid lobbyId);
     }
 }

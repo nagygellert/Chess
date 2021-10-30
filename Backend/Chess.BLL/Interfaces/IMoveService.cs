@@ -9,7 +9,7 @@ namespace Chess.BLL.Interfaces
 {
     public interface IMoveService
     {
-        Task<MoveDTO> GetMove(string id);
+        Task<MoveDTO> GetMove(Guid id);
 
         Task<MoveDTO> InsertMove(MoveDTO move);
     }

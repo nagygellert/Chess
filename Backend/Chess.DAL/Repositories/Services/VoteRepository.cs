@@ -1,7 +1,7 @@
-﻿using Chess.DAL.Configurations.Interfaces;
+﻿using Chess.DAL.Contexts;
 using Chess.DAL.Repositories.Interfaces;
 using Chess.Models.Entities;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,24 +12,19 @@ namespace Chess.DAL.Repositories.Services
 {
     public class VoteRepository : IVoteRepository
     {
-        private readonly IMongoCollection<Vote> _voteCollection;
+        private readonly ChessDbContext _chessDbContext;
 
-        public VoteRepository(IChessDatabaseSettings databaseSettings)
+        public VoteRepository(ChessDbContext chessDbContext)
         {
-            var client = new MongoClient(databaseSettings.ConnectionString);
-            var database = client.GetDatabase(databaseSettings.DatabaseName);
-
-            _voteCollection = database.GetCollection<Vote>(databaseSettings.VotesCollectionName);
+            _chessDbContext = chessDbContext;
         }
 
-        public async Task<IEnumerable<Vote>> GetVotesForLobby(string lobbyId)
-        {
-            return await _voteCollection.Find(vote => !vote.IsDeleted && vote.LobbyId == lobbyId).ToListAsync();
-        }
-
+        public async Task<IEnumerable<Vote>> GetVotesForLobby(Guid lobbyId)
+            => await _chessDbContext.Votes.Where(vote => vote.Lobby.Id == lobbyId).ToListAsync();
+        
         public async Task<Vote> InsertVote(Vote vote)
         {
-            await _voteCollection.InsertOneAsync(vote);
+            await _chessDbContext.Votes.AddAsync(vote);
             return vote;
         }
     }

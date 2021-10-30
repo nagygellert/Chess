@@ -1,7 +1,6 @@
-﻿using Chess.DAL.Configurations.Interfaces;
+﻿using Chess.DAL.Contexts;
 using Chess.DAL.Repositories.Interfaces;
 using Chess.Models.Entities;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,24 +11,19 @@ namespace Chess.DAL.Repositories.Services
 {
     public class MoveRepository : IMoveRepository
     {
-        private readonly IMongoCollection<Move> _moveCollection;
+        private readonly ChessDbContext _chessDbContext;
 
-        public MoveRepository(IChessDatabaseSettings databaseSettings)
+        public MoveRepository(ChessDbContext chessDbContext)
         {
-            var client = new MongoClient(databaseSettings.ConnectionString);
-            var database = client.GetDatabase(databaseSettings.DatabaseName);
-
-            _moveCollection = database.GetCollection<Move>(databaseSettings.MovesCollectionName);
+            _chessDbContext = chessDbContext;
         }
 
-        public async Task<Move> GetMove(string id)
-        {
-           return await _moveCollection.Find(move => !move.IsDeleted && move.Id == id).FirstOrDefaultAsync();
-        }
+        public async Task<Move> GetMove(Guid id)
+            => await _chessDbContext.Moves.FindAsync(id);
 
         public async Task<Move> InsertMove(Move move)
         {
-            await _moveCollection.InsertOneAsync(move);
+            await _chessDbContext.Moves.AddAsync(move);
             return move;
         }
     }

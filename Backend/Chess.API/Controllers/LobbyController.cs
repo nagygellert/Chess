@@ -1,5 +1,6 @@
 ﻿using Chess.BLL.DTOs;
 using Chess.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,22 +14,33 @@ namespace Chess.API.Controllers
     public class LobbyController : ControllerBase
     {
         private readonly ILobbyService _lobbyService;
+        private readonly ILobbyConfigService _lobbyConfigService;
 
-        public LobbyController(ILobbyService lobbyService)
+        public LobbyController(ILobbyService lobbyService, ILobbyConfigService lobbyConfigService)
         {
             _lobbyService = lobbyService;
+            _lobbyConfigService = lobbyConfigService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> CreateLobby([FromBody] UserDTO lobbyOwner)
         {
-            var allMsg = await _lobbyService.CreateLobby();
+            var allMsg = await _lobbyConfigService.CreateLobbyConfig(lobbyOwner);
             return Ok(allMsg);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{roomCode}/config")]
+        public async Task<IActionResult> GetLobbyConfig(int roomCode)
+        {
+            var config = await _lobbyConfigService.GetLobbyConfigByCode(roomCode);
+            return Ok(config);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetLobbyState(Guid id)
         {
             var msg = await _lobbyService.GetTableState(id);
             return Ok(msg);
@@ -36,7 +48,7 @@ namespace Chess.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteLobby(Guid id)
         {
             await _lobbyService.DeleteLobby(id);
             return NoContent();
@@ -44,7 +56,7 @@ namespace Chess.API.Controllers
 
         [HttpPost]
         [Route("/move")]
-        public async Task<IActionResult> PostMove(string id, MoveDTO move)
+        public async Task<IActionResult> PostMove(Guid id, MoveDTO move)
         {
             await _lobbyService.InsertMove(id, move);
             return NoContent();

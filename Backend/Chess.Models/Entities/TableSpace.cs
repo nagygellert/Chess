@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Models.Entities
 {
-    public class TableSpace
-    {
-        public TableColumn Column { get; set; } 
+    public class TableSpace : EntityBase
+    { 
+        public TableColumn Column { get; set; }
 
         public int Row { get; set; }
     }

@@ -22,7 +22,7 @@ namespace Chess.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<MoveDTO> GetMove(string id)
+        public async Task<MoveDTO> GetMove(Guid id)
         {
             return _mapper.Map<MoveDTO>(await _moveRepository.GetMove(id));
         }

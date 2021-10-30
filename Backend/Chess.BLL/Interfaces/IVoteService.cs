@@ -9,8 +9,8 @@ namespace Chess.BLL.Interfaces
 {
     public interface IVoteService
     {
-        Task<IEnumerable<VoteDTO>> GetVotesForLobby(string lobbyId);
+        Task<IEnumerable<VoteDTO>> GetVotesForLobby(Guid lobbyId);
 
-        Task<VoteDTO> InsertVote(string lobbyId, VoteDTO vote);
+        Task<VoteDTO> InsertVote(Guid lobbyId, VoteDTO vote);
     }
 }

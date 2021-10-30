@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between p-3">
+    <app-chat></app-chat>
+    <div *ngIf='this.lobbyConfig' class="d-flex flex-column">
+        <h1>Your room code is</h1>
+        <h1 class="align-self-center m-2">{{this.lobbyConfig.roomCode}}</h1>
+        <button mat-raised-button color="primary" class="mt-auto">Start game</button>
+    </div>
+    <div *ngIf='!this.lobbyConfig' class="d-flex flex-column">
+        <button mat-raised-button color="primary" class="mt-auto" (click)='createLobby()'>Create Lobby</button>
+    </div>
+    <div class="flex-column">
+        <app-player-list class="p-2" title='White side' [players]='this.lobbyConfig?.players ?? []'></app-player-list>
+        <app-player-list class="p-2" title='Black side' [players]='this.lobbyConfig?.players ?? []'></app-player-list>
+    </div>
+</div>

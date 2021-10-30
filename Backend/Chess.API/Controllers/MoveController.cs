@@ -21,7 +21,7 @@ namespace Chess.API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var msg = await _moveService.GetMove(id);
             return Ok(msg);

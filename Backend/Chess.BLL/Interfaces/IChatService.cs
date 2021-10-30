@@ -11,10 +11,10 @@ namespace Chess.BLL.Interfaces
     {
         Task<IEnumerable<ChatMessageDTO>> GetAsync();
 
-        Task<ChatMessageDTO> GetAsync(string id);
+        Task<ChatMessageDTO> GetAsync(Guid id);
 
         Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage);
 
-        Task RemoveAsync(string id);
+        Task RemoveAsync(Guid id);
     }
 }
