@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { LoginComponent } from './components/login/login.component';
 import { httpInterceptorProviders } from './interceptors/http-interceptors';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,15 +24,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
+import { CreateLobbyComponent } from './components/menus/create-lobby/create-lobby.component';
+import { JoinLobbyComponent } from './components/menus/join-lobby/join-lobby.component';
+import { StartingMenuComponent } from './components/menus/starting-menu/starting-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    LoginComponent,
     PlayerListComponent,
     LobbyComponent,
-    JoinGameComponent
+    JoinGameComponent,
+    CreateLobbyComponent,
+    JoinLobbyComponent,
+    StartingMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,7 @@ import { environment } from 'src/environments/environment';
     AuthModule.forRoot({
       config: {
           authority: environment.identityServerUrl,
-          redirectUrl: 'http://localhost:4200/login',
+          redirectUrl: 'http://localhost:4200',
           postLogoutRedirectUri: window.location.origin,
           clientId: 'chessAngular',
           scope: 'chessAPI openid profile offline_access',

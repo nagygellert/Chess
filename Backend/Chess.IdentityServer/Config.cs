@@ -40,10 +40,10 @@ namespace IdentityServerAspNetIdentity
                     AllowedGrantTypes = GrantTypes.Code,
                     
                     // where to redirect to after login
-                    RedirectUris = { "http://localhost:4200/login" },
+                    RedirectUris = { "http://localhost:4200" },
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:4200" },
 
                     AllowedCorsOrigins = new List<string>
                     {

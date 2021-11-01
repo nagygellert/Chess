@@ -1,0 +1,15 @@
+<h1>Online chess</h1>
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <mat-card class="d-flex justify-content-center align-items-center flex-column ">
+        <mat-card-title>Main menu</mat-card-title>
+        <mat-card-content class="m-3">
+            <form #startMenu='ngForm'>
+                <button *ngIf='!isSignedIn' mat-raised-button color="primary" (click)='login()'>Sign in</button>
+                <button mat-raised-button color="primary" routerLink='/create-lobby'>Create lobby</button>
+                <button mat-raised-button color="primary" routerLink='/join'>Join existing lobby</button>
+                <button *ngIf='isSignedIn' mat-raised-button color="primary" (click)='logout()'>Sign out</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>
+    
