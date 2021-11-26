@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.BLL.DTOs
 {
-    public class PieceLocationDTO
+    public enum AccountType
     {
-        public TableSpaceDTO TableSpace { get; set; }
-
-        public int Piece { get; set; }
+        Registered,
+        Temporary
     }
 }

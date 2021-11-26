@@ -13,7 +13,7 @@ namespace Chess.Models.Entities
     {
         public string Username { get; set; }
 
-        public LobbyConfig Lobby { get; set; }
+        public Guid? LobbyConfigId { get; set; }
 
         public Side? Side { get; set; }
     }

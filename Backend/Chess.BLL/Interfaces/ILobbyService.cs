@@ -9,12 +9,14 @@ namespace Chess.BLL.Interfaces
 {
     public interface ILobbyService
     {
-        Task<IEnumerable<PieceLocationDTO>> GetTableState(Guid lobbyId);
+        Task<IEnumerable<MoveDTO>> GetTableMoves(string lobbyName);
 
-        Task<Guid> CreateLobby();
+        Task<IEnumerable<TileDTO>> CreateLobby(string lobbyName);
 
-        Task InsertMove(Guid lobbyId, MoveDTO moveId);
+        IEnumerable<TileDTO> GenerateDefaultBoard();
 
-        Task DeleteLobby(Guid lobbyId);
+        Task InsertMove(string lobbyName, MoveDTO moveId);
+
+        Task DeleteLobby(string lobbyName);
     }
 }

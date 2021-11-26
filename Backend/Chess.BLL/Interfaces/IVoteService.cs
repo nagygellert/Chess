@@ -1,4 +1,5 @@
 ﻿using Chess.BLL.DTOs;
+using Chess.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,10 @@ namespace Chess.BLL.Interfaces
 {
     public interface IVoteService
     {
-        Task<IEnumerable<VoteDTO>> GetVotesForLobby(Guid lobbyId);
+        Task<Move> SummarizeVotes(string lobbyName);
 
-        Task<VoteDTO> InsertVote(Guid lobbyId, VoteDTO vote);
+        Task<VoteDTO> InsertVote(VoteDTO vote);
+
+        Task<IEnumerable<VoteDTO>> GetVotesForLobby(string lobbyName, int round);
     }
 }

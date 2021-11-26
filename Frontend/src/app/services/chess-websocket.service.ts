@@ -1,38 +1,20 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr";
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { Subject } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
-import { ChatMessage } from '../models/chatMessage';
-import { ChessAPIService } from './chess-api-service.service';
+import { UserData } from '../models/userData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChessWebsocketService {
-
+  constructor(private cookieService: CookieService) {}
   private chessUrl = environment.chessApiUrl;
-  private connection: signalR.HubConnection;
-  chatMessages = new Subject<ChatMessage[]>();
 
-  constructor(private chessAPI: ChessAPIService, private oidcService: OidcSecurityService) { 
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.chessUrl}/hub`, { accessTokenFactory: () => this.oidcService.getAccessToken()})
-      .build();
-    this.init();
-    console.log('konstruktor');
+  getConnection(hubUrl: string): signalR.HubConnection {
+    var userData = JSON.parse(atob(this.cookieService.get('user'))) as UserData;
+    return new signalR.HubConnectionBuilder()
+    .withUrl(`${this.chessUrl}/${hubUrl}?userId=${userData.id}`)
+    .build();
   }
-
-  init() {
-    this.connection.start().catch(err => console.log(err))
-    this.connection.on("messageReceived", _ => {
-      console.log(this.chatMessages);
-      this.chessAPI.getChatMessages().subscribe(messages => this.chatMessages.next(messages))
-    })
-  }
-
-  sendMessage() {
-    this.connection.send("newMessage");
-  }
-
 }

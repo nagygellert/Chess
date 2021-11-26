@@ -10,6 +10,6 @@ namespace Chess.Models.Entities
     {
         public LobbyConfig LobbyConfig { get; set; }
 
-        public IEnumerable<PieceLocation> Tiles { get; set; }
+        public IEnumerable<Move> Moves { get; set; }
     }
 }

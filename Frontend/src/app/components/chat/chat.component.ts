@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { CookieService } from 'ngx-cookie-service';
+import { stringify } from 'querystring';
 import { ChatMessage } from 'src/app/models/chatMessage';
 import { UserData } from 'src/app/models/userData';
 import { ChessAPIService } from 'src/app/services/chess-api-service.service';
@@ -10,25 +12,37 @@ import { ChessWebsocketService } from 'src/app/services/chess-websocket.service'
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
-  chatMessages: ChatMessage[] = [];
   userData: UserData;
+  connection: signalR.HubConnection;
+  chatMessages: ChatMessage[] = [];
   newMessage: string = "";
+  @Input() lobbyName: string = '';
   
-  constructor(private oidcSecurityService: OidcSecurityService, private chessAPIClient: ChessAPIService, private socket: ChessWebsocketService) { 
-    chessAPIClient.getChatMessages().subscribe(messages => this.chatMessages = messages);
-    this.userData = JSON.parse(localStorage['user']) as UserData;
-    this.socket.chatMessages.subscribe(message => {this.chatMessages = message; console.log(message)});
+  constructor(private cookieService: CookieService, private chessAPIClient: ChessAPIService, private socket: ChessWebsocketService) {
+    this.connection = this.socket.getConnection('chathub');
+    this.userData = JSON.parse(atob(this.cookieService.get('user'))) as UserData;
   }
 
   sendMessage() {
-    //this.oidcSecurityService.userData$.subscribe(data => this.userData = data.userData as UserData);
-    this.chessAPIClient.postChatMessage(new ChatMessage(this.userData, this.newMessage, new Date())).subscribe(_ => {
-      this.socket.sendMessage();
-    });
+    this.connection.invoke('NewMessage', new ChatMessage(this.userData, this.newMessage, new Date()), this.lobbyName,);
     this.newMessage = "";
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.connection.on('SetMessages', (messages: ChatMessage[]) => {
+      this.chatMessages = messages;
+    });
+    this.connection.on('SetMessage', (message: ChatMessage) => {
+      this.chatMessages.push(message);
+    });
+    this.connection.start().then(() => this.connection.invoke('EnteredChat', this.lobbyName));
+  }
+
+  ngOnDestroy(): void {
+    this.connection.off("SetMessages");
+    this.connection.off("SetMessage");
+    this.connection.stop();
+  }
 }

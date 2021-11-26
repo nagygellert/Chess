@@ -9,12 +9,8 @@ namespace Chess.BLL.Interfaces
 {
     public interface IChatService
     {
-        Task<IEnumerable<ChatMessageDTO>> GetAsync();
+        Task<IEnumerable<ChatMessageDTO>> GetRoomMessages(string roomName);
 
-        Task<ChatMessageDTO> GetAsync(Guid id);
-
-        Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage);
-
-        Task RemoveAsync(Guid id);
+        Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage, string roomName);
     }
 }

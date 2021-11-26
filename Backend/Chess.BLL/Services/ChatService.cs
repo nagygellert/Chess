@@ -15,45 +15,30 @@ namespace Chess.BLL.Services
     {
         private readonly IChatRepository _chatRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ILobbyConfigRepository _lobbyConfigRepository;
         private readonly IMapper _mapper;
 
-        public ChatService(IChatRepository chatRepository, IUserRepository userRepository, IMapper mapper)
+        public ChatService(IChatRepository chatRepository, IUserRepository userRepository, IMapper mapper, ILobbyConfigRepository lobbyConfigRepository)
         {
             _chatRepository = chatRepository;
             _userRepository = userRepository;
             _mapper = mapper;
+            _lobbyConfigRepository = lobbyConfigRepository;
         }
 
-        public async Task<IEnumerable<ChatMessageDTO>> GetAsync()
+        public async Task<IEnumerable<ChatMessageDTO>> GetRoomMessages(string roomName)
         {
-            var messages = await _chatRepository.GetAllAsync();
+            var messages = await _chatRepository.GetMessagesForLobby(roomName);
             return _mapper.Map<IEnumerable<ChatMessageDTO>>(messages);
         }
 
-        public async Task<ChatMessageDTO> GetAsync(Guid id) 
-        {
-            var msg = await _chatRepository.GetOneAsync(id);
-            return _mapper.Map<ChatMessageDTO>(msg);
-        }
-
-        public async Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage)
+        public async Task<ChatMessageDTO> InsertAsync(ChatMessageDTO chatMessage, string roomName)
         {
             var mappedMessage = _mapper.Map<ChatMessage>(chatMessage);
-            var user = await _userRepository.GetRegisteredUserById(chatMessage.User.Id);
-            if (user == null)
-            {
-                var tempUser = await _userRepository.GetTemporaryUser(chatMessage.User.Id);
-                mappedMessage.User = tempUser;
-            }
-            else
-            {
-                mappedMessage.User = user;
-            }
+            mappedMessage.User = await _userRepository.GetUser(chatMessage.User.Id);
+            mappedMessage.Lobby = await _lobbyConfigRepository.GetLobbyConfigByName(roomName);
             var inserted = await _chatRepository.InsertOneAsync(mappedMessage);
             return _mapper.Map<ChatMessageDTO>(inserted);
         }
-
-        public async Task RemoveAsync(Guid id) =>
-            await _chatRepository.RemoveOneAsync(id);
     }
 }

@@ -14,6 +14,14 @@ namespace Chess.BLL.DTOs
 
         public IEnumerable<UserDTO> BlackTeamPlayers { get; set; }
 
-        public int RoomCode { get; set; }
+        public string Name { get; set; }
+
+        public int Round { get; set; }
+
+        public bool GameStarted { get; set; }
+
+        public bool IsPrivate { get; set; }
+
+        public string Password { get; set; }
     }
 }

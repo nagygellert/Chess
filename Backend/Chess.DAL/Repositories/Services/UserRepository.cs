@@ -29,14 +29,9 @@ namespace Chess.DAL.Repositories.Services
             return await _chessDbContext.RegisteredUsers.FirstOrDefaultAsync(u => u.UserProfileId == sub);
         }
 
-        public async Task<UserBase> GetTemporaryUser(Guid id)
+        public async Task<UserBase> GetUser(Guid id)
         {
-            return await _chessDbContext.TemporaryUsers.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<UserBase>> GetAllUser()
-        {
-            return await _chessDbContext.TemporaryUsers.ToListAsync();
+            return await _chessDbContext.Users.FindAsync(id);
         }
 
         public async Task<RegisteredUser> CreateRegisteredUser(RegisteredUser user)
@@ -46,9 +41,9 @@ namespace Chess.DAL.Repositories.Services
             return user;
         }
 
-        public async Task<UserBase> CreateTemporaryUser(UserBase temporaryUser)
+        public async Task<UserBase> CreateUser(UserBase temporaryUser)
         {
-            await _chessDbContext.TemporaryUsers.AddAsync(temporaryUser);
+            await _chessDbContext.Users.AddAsync(temporaryUser);
             await _chessDbContext.SaveChangesAsync();
             return temporaryUser;
         }
@@ -60,24 +55,18 @@ namespace Chess.DAL.Repositories.Services
             return updatedUser;
         }
 
-        public async Task<UserBase> UpdateTemporaryUser(UserBase updatedUser)
+        public async Task<UserBase> UpdateUser(UserBase updatedUser)
         {
-            _chessDbContext.TemporaryUsers.Update(updatedUser);
+            _chessDbContext.Users.Update(updatedUser);
             await _chessDbContext.SaveChangesAsync();
             return updatedUser;
         }
 
-        public async Task DeleteTemporaryUser(Guid id)
+        public async Task DeleteUser(Guid id)
         {
-            var user = await _chessDbContext.TemporaryUsers.FindAsync(id);
-            _chessDbContext.TemporaryUsers.Remove(user);
+            var user = await _chessDbContext.Users.FindAsync(id);
+            _chessDbContext.Users.Remove(user);
 
-        }
-
-        public async Task DeleteRegisteredUser(Guid id)
-        {
-            var registeredUser = await _chessDbContext.RegisteredUsers.FindAsync(id);
-            _chessDbContext.RegisteredUsers.Remove(registeredUser);
         }
     }
 }

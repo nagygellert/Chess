@@ -19,14 +19,8 @@ namespace Chess.DAL.Repositories.Services
             _chessDbContext = chessDbContext;
         }
 
-        public async Task<IEnumerable<ChatMessage>> GetAllAsync()   
-            => await _chessDbContext.ChatMessages.Include(msg => msg.User).ToListAsync();
-
-        public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(Guid lobbyId)  
-            => await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Id == lobbyId).ToListAsync();
-
-        public async Task<ChatMessage> GetOneAsync(Guid id) 
-            => await _chessDbContext.ChatMessages.FindAsync(id);
+        public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyName)  
+            => await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Name == lobbyName).Include(msg => msg.User).ToListAsync();
         
         public async Task<ChatMessage> InsertOneAsync(ChatMessage msg)
         {
@@ -35,10 +29,11 @@ namespace Chess.DAL.Repositories.Services
             return msg;
         }
 
-        public async Task RemoveOneAsync(Guid id)
+        public async Task DeleteMessagesForLobby(string lobbyName)
         {
-            var messageToDelete = await _chessDbContext.ChatMessages.FindAsync(id);
-            _chessDbContext.ChatMessages.Remove(messageToDelete);
-        } 
+            var messagesToDelete = await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Name == lobbyName).ToListAsync();
+            _chessDbContext.ChatMessages.RemoveRange(messagesToDelete);
+            await _chessDbContext.SaveChangesAsync();
+        }
     }
 }

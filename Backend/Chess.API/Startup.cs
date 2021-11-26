@@ -1,4 +1,4 @@
-using Chess.API.SignalRHubs;
+using Chess.API.SignalRHubs.Services;
 using Chess.BLL.Interfaces;
 using Chess.BLL.MapperProfiles;
 using Chess.BLL.Services;
@@ -23,6 +23,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Chess.API.Helpers;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Hangfire;
+using Hangfire.Storage;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Chess
 {
@@ -56,6 +62,9 @@ namespace Chess
 
             services.AddAutoMapper(typeof(ChessProfile));
 
+            services.AddHangfireServices(Configuration);
+
+
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -66,8 +75,8 @@ namespace Chess
                         ValidateAudience = false
                     };
                 });
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>());
 
-            // adds an authorization policy to make sure the token is for scope 'api1'
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiScope", policy =>
@@ -77,7 +86,10 @@ namespace Chess
                 });
             });
 
-            services.AddSignalR();
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -100,6 +112,12 @@ namespace Chess
 
             app.UseRouting();
 
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Assets")),
+                RequestPath = "/Assets"
+            });
+
             app.UseCors("ChessAngular");
 
             app.UseAuthentication();
@@ -109,7 +127,9 @@ namespace Chess
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/hub");
+                endpoints.MapHub<LobbyHub>("/lobbyhub");
+                endpoints.MapHub<LobbyListHub>("/lobbylisthub");
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

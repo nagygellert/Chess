@@ -1,6 +1,7 @@
 ﻿using Chess.DAL.Contexts;
 using Chess.DAL.Repositories.Interfaces;
 using Chess.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,15 @@ namespace Chess.DAL.Repositories.Services
             _chessDbContext = chessDbContext;
         }
 
-        public async Task<IEnumerable<PieceLocation>> GetTableState(Guid lobbyId)
+        public async Task<IEnumerable<Move>> GetTableState(string lobbyName)
         {
-            return (await _chessDbContext.Lobbies.FindAsync(lobbyId)).Tiles;
+            return (await _chessDbContext.Lobbies.Include(lobby => lobby.Moves).FirstOrDefaultAsync(lobby => lobby.LobbyConfig.Name == lobbyName)).Moves;
         }
 
         public async Task<Lobby> InsertLobby(Lobby lobby)
         {
             await _chessDbContext.Lobbies.AddAsync(lobby);
+            await _chessDbContext.SaveChangesAsync();
             return lobby;
         }
 
@@ -45,10 +47,16 @@ namespace Chess.DAL.Repositories.Services
             return lobby;
         }
 
-        public async Task DeleteLobby(Guid lobbyId)
+        public async Task DeleteLobby(string lobbyName)
         {
-            var lobbyToDelete = await _chessDbContext.Lobbies.FindAsync(lobbyId);
+            var lobbyToDelete = await _chessDbContext.Lobbies.FirstOrDefaultAsync(lobby => lobby.LobbyConfig.Name == lobbyName);
             _chessDbContext.Lobbies.Remove(lobbyToDelete);
+            await _chessDbContext.SaveChangesAsync();
+        }
+
+        public async Task<Lobby> GetLobbyByName(string lobbyName)
+        {
+            return await _chessDbContext.Lobbies.FirstOrDefaultAsync(lobby => lobby.LobbyConfig.Name == lobbyName);
         }
     }
 }

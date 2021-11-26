@@ -10,6 +10,6 @@ namespace Chess.Models.Entities
 
         public string Text { get; set; }
 
-        public Lobby Lobby { get; set; }
+        public LobbyConfig Lobby { get; set; }
     }
 }

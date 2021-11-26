@@ -9,7 +9,9 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private oidcSecurityService: OidcSecurityService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (this.oidcSecurityService.isAuthenticated()) {
+        var signedIn: boolean = false;
+        this.oidcSecurityService.isAuthenticated$.subscribe(auth => signedIn = auth.isAuthenticated)
+        if (signedIn) {
           const authReq = req.clone({
             headers: req.headers.set('Authorization', `Bearer ${this.oidcSecurityService.getAccessToken()}`)
           });

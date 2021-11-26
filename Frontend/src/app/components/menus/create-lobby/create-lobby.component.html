@@ -2,24 +2,21 @@
     <mat-card class="d-flex justify-content-center align-items-center flex-column ">
         <mat-card-title>Create a new lobby</mat-card-title>
         <mat-card-content class="p-3">
-            <form #createLobby='ngForm' (ngSubmit)="this.createLobby()">
+            <form (ngSubmit)="createLobby()">
                 <div>
                     <mat-form-field appearance="fill" class="my-3">
                         <input matInput [(ngModel)]='this.lobbyName' name='lobbyName' type="text" minlength="1" maxlength="50" placeholder="Enter the lobby's name" required>
-                        <mat-hint align="start"><strong>This has to be unique!</strong></mat-hint>
+                        <mat-hint align="start"><strong>The name has to be unique!</strong></mat-hint>
                     </mat-form-field>
                     <mat-checkbox class="m-3" name='isPrivate' [(ngModel)]='this.isPrivate'>Private lobby</mat-checkbox>
                 </div>
                 <div>
                     <mat-form-field appearance="fill" *ngIf='this.isPrivate'>
-                        <input matInput [(ngModel)]='this.password' name='lobbyPasscode' type="text" minlength="1" maxlength="50" placeholder="Enter the lobby's password" required>
+                        <input matInput [(ngModel)]='this.password' name='lobbyPasscode' type="password" placeholder="Enter the lobby's password" required>
                     </mat-form-field>
                 </div>
                 <button mat-raised-button color="primary" class="mt-4" type="submit">Create</button>
             </form>
         </mat-card-content>
-        <mat-card-actions>
-    
-        </mat-card-actions>
     </mat-card>
 </div>

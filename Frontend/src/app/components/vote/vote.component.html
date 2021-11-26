@@ -1,0 +1,12 @@
+<mat-card>
+    <mat-card-title>Cast votes</mat-card-title>
+    <mat-card-content>
+      <p *ngFor='let vote of this.votes' class="d-flex align-items-center justify-content-center">
+        <span>{{vote.user.name}}'s vote: {{vote.move.from.column | columnName}}{{vote.move.from.row}}</span>
+        <mat-icon class="material-icons-outlined">
+            arrow_right_alt
+        </mat-icon>
+        <span>{{vote.move.to.column | columnName}}{{vote.move.to.row}}</span>
+      </p>
+    </mat-card-content>
+</mat-card>

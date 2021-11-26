@@ -9,14 +9,10 @@ namespace Chess.DAL.Repositories.Interfaces
 {
     public interface IChatRepository
     {
-        Task<IEnumerable<ChatMessage>> GetAllAsync();
+        Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyName);
 
-        Task<IEnumerable<ChatMessage>> GetMessagesForLobby(Guid lobbyId);
-
-        Task<ChatMessage> GetOneAsync(Guid id);
+        Task DeleteMessagesForLobby(string lobbyName);
 
         Task<ChatMessage> InsertOneAsync(ChatMessage msg);
-
-        Task RemoveOneAsync(Guid id);
     }
 }

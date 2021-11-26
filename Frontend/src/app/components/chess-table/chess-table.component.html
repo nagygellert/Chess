@@ -1,0 +1,18 @@
+<mat-grid-list cols="8" rowHeight="1:1">
+    <ng-container *ngFor='let tile of board'>
+        <ng-container *ngIf='this.clickedTile?.row != tile.row || this.clickedTile?.column != tile.column'>
+            <mat-grid-tile (click)='tileClicked(tile)' class="white-tile" *ngIf='(tile.column + tile.row) % 2 == 0'>
+                {{tile.column | columnName}}{{tile.row}}
+                <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
+            </mat-grid-tile>
+            <mat-grid-tile (click)='tileClicked(tile)' class="black-tile" *ngIf='(tile.column + tile.row) % 2 == 1'>
+                {{tile.column | columnName}}{{tile.row}}
+                <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
+            </mat-grid-tile>
+        </ng-container>
+        <mat-grid-tile (click)='tileClicked(tile)' class="clicked-tile" *ngIf='this.clickedTile?.row == tile.row && this.clickedTile?.column == tile.column'>
+            {{tile.column | columnName}}{{tile.row}}
+            <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
+        </mat-grid-tile>
+    </ng-container>
+</mat-grid-list>

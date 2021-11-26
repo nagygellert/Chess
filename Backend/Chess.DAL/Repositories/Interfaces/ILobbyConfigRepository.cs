@@ -9,12 +9,20 @@ namespace Chess.DAL.Repositories.Interfaces
 {
     public interface ILobbyConfigRepository
     {
-        Task<LobbyConfig> GetLobbyConfigByCode(int roomCode);
+        Task<LobbyConfig> GetLobbyConfigByName(string name);
 
-        Task<IEnumerable<int>> GetExistingRoomCodes();
+        Task<IEnumerable<LobbyConfig>> GetLobbyConfigs();
+
+        Task<LobbyConfig> GetLobbyConfigById(Guid Id);
+
+        Task<IEnumerable<string>> GetExistingRoomNames();
+
+        Task<int> GetCurrentRound(string lobbyName);
 
         Task<LobbyConfig> CreateLobbyConfig(LobbyConfig config);
 
-        Task DeleteLobbyConfig(Guid id);
+        Task UpdateLobbyConfig(string lobbyName, LobbyConfig config);
+
+        Task DeleteLobbyConfig(string roomName);
     }
 }

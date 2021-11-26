@@ -36,16 +36,16 @@ namespace Chess.BLL.Services
             return _mapper.Map<UserDTO>(efUser);
         }
 
-        public async Task<TemporaryUserDTO> GetTemporaryUser(Guid id)
+        public async Task<UserDTO> GetUser(Guid id)
         {
-            var efUser = await _userRepository.GetTemporaryUser(id);
-            return _mapper.Map<TemporaryUserDTO>(efUser);
-        }
-
-        public async Task<IEnumerable<TemporaryUserDTO>> GetAllUser()
-        {
-            var efUser = await _userRepository.GetAllUser();
-            return _mapper.Map<IEnumerable<TemporaryUserDTO>>(efUser);
+            var efUser = await _userRepository.GetUser(id);
+            var mappedUser = _mapper.Map<UserDTO>(efUser);
+            if (efUser.LobbyConfigId.HasValue)
+            {
+                var lobby = await _lobbyConfigRepository.GetLobbyConfigById(efUser.LobbyConfigId.Value);
+                mappedUser.LobbyName = lobby.Name;
+            }
+            return mappedUser;
         }
 
         public async Task<UserDTO> CreateRegisteredUser(UserDTO user)
@@ -60,13 +60,11 @@ namespace Chess.BLL.Services
             return _mapper.Map<UserDTO>(existingUser);
         }
 
-        public async Task<TemporaryUserDTO> CreateTemporaryUser(TemporaryUserDTO temporaryUser)
+        public async Task<UserDTO> CreateTemporaryUser(UserDTO temporaryUser)
         {
             var userToInsert = _mapper.Map<UserBase>(temporaryUser);
-            var lobby = await _lobbyConfigRepository.GetLobbyConfigByCode(temporaryUser.LobbyCode);
-            userToInsert.Lobby = lobby;
-            var insertedUser = await _userRepository.CreateTemporaryUser(userToInsert);
-            return _mapper.Map<TemporaryUserDTO>(insertedUser);
+            var insertedUser = await _userRepository.CreateUser(userToInsert);
+            return _mapper.Map<UserDTO>(insertedUser);
         }
 
         public async Task<UserDTO> UpdateRegisteredUser(UserDTO updatedUser)
@@ -76,21 +74,23 @@ namespace Chess.BLL.Services
             return _mapper.Map<UserDTO>(result);
         }
 
-        public async Task<TemporaryUserDTO> UpdateTemporaryUser(TemporaryUserDTO updatedUser)
+        public async Task<UserDTO> UpdateUser(UserDTO updatedUser)
         {
             var mappedUser = _mapper.Map<UserBase>(updatedUser);
-            var result = await _userRepository.UpdateTemporaryUser(mappedUser);
-            return _mapper.Map<TemporaryUserDTO>(result);
+            var result = await _userRepository.UpdateUser(mappedUser);
+            return _mapper.Map<UserDTO>(result);
         }
 
-        public async Task DeleteRegisteredUser(Guid id)
+        public async Task DeleteUser(Guid id)
         {
-            await _userRepository.DeleteRegisteredUser(id);
+            await _userRepository.DeleteUser(id);
         }
 
-        public async Task DeleteTemporaryUser(Guid id)
+        public async Task<UserDTO> SwapSides(Guid id)
         {
-            await _userRepository.DeleteTemporaryUser(id);
+            var user = await _userRepository.GetUser(id);
+            user.Side = user.Side == Models.Enums.Side.White ? Models.Enums.Side.Black : Models.Enums.Side.White;
+            return _mapper.Map<UserDTO>(await _userRepository.UpdateUser(user));
         }
     }
 }

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  chessApiUrl: 'https://localhost:44325',
+  chessApiUrl: 'https://localhost:44340',
+  assetUrl: '/Assets',
   identityServerUrl: 'https://localhost:44365'
 };
 

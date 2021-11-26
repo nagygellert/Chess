@@ -13,20 +13,18 @@ namespace Chess.BLL.Interfaces
 
         Task<UserDTO> GetRegisteredUserBySub(string sub);
 
-        Task<IEnumerable<TemporaryUserDTO>> GetAllUser();
-
-        Task<TemporaryUserDTO> GetTemporaryUser(Guid id);
+        Task<UserDTO> GetUser(Guid id);
 
         Task<UserDTO> CreateRegisteredUser(UserDTO user);
 
-        Task<TemporaryUserDTO> CreateTemporaryUser(TemporaryUserDTO temporaryUser);
+        Task<UserDTO> CreateTemporaryUser(UserDTO temporaryUser);
 
         Task<UserDTO> UpdateRegisteredUser(UserDTO updatedUser);
 
-        Task<TemporaryUserDTO> UpdateTemporaryUser(TemporaryUserDTO updatedUser);
+        Task<UserDTO> UpdateUser(UserDTO updatedUser);
 
-        Task DeleteTemporaryUser(Guid id);
+        Task<UserDTO> SwapSides(Guid id);
 
-        Task DeleteRegisteredUser(Guid id);
+        Task DeleteUser(Guid id);
     }
 }

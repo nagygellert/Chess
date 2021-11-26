@@ -80,14 +80,23 @@ namespace Chess.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("GameStarted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RoomCode")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Round")
                         .HasColumnType("int");
@@ -102,14 +111,11 @@ namespace Chess.DAL.Migrations
                     b.ToTable("LobbyConfigs");
                 });
 
-            modelBuilder.Entity("Chess.Models.Entities.PieceLocation", b =>
+            modelBuilder.Entity("Chess.Models.Entities.Move", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Color")
-                        .HasColumnType("int");
 
                     b.Property<int>("Column")
                         .HasColumnType("int");
@@ -117,29 +123,31 @@ namespace Chess.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("LobbyId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("NewColumn")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewRow")
+                        .HasColumnType("int");
+
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LobbyId");
 
-                    b.ToTable("PieceLocations");
+                    b.HasIndex("UserId");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("PieceLocation");
+                    b.ToTable("Moves");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.UserBase", b =>
@@ -158,7 +166,7 @@ namespace Chess.DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("LobbyId")
+                    b.Property<Guid?>("LobbyConfigId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Side")
@@ -169,7 +177,7 @@ namespace Chess.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LobbyId");
+                    b.HasIndex("LobbyConfigId");
 
                     b.ToTable("UserData");
 
@@ -182,6 +190,9 @@ namespace Chess.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Column")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -191,10 +202,16 @@ namespace Chess.DAL.Migrations
                     b.Property<Guid?>("LobbyId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("MoveId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("NewColumn")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NewRow")
+                        .HasColumnType("int");
 
                     b.Property<int>("Round")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Row")
                         .HasColumnType("int");
 
                     b.Property<Guid?>("UserId")
@@ -204,29 +221,9 @@ namespace Chess.DAL.Migrations
 
                     b.HasIndex("LobbyId");
 
-                    b.HasIndex("MoveId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Votes");
-                });
-
-            modelBuilder.Entity("Chess.Models.Entities.Move", b =>
-                {
-                    b.HasBaseType("Chess.Models.Entities.PieceLocation");
-
-                    b.Property<int>("NewColumn")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NewRow")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("UserId");
-
-                    b.HasDiscriminator().HasValue("Move");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.RegisteredUser", b =>
@@ -243,7 +240,7 @@ namespace Chess.DAL.Migrations
 
             modelBuilder.Entity("Chess.Models.Entities.ChatMessage", b =>
                 {
-                    b.HasOne("Chess.Models.Entities.Lobby", "Lobby")
+                    b.HasOne("Chess.Models.Entities.LobbyConfig", "Lobby")
                         .WithMany()
                         .HasForeignKey("LobbyId");
 
@@ -274,22 +271,24 @@ namespace Chess.DAL.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Chess.Models.Entities.PieceLocation", b =>
+            modelBuilder.Entity("Chess.Models.Entities.Move", b =>
                 {
-                    b.HasOne("Chess.Models.Entities.Lobby", "Lobby")
-                        .WithMany("Tiles")
+                    b.HasOne("Chess.Models.Entities.Lobby", null)
+                        .WithMany("Moves")
                         .HasForeignKey("LobbyId");
 
-                    b.Navigation("Lobby");
+                    b.HasOne("Chess.Models.Entities.UserBase", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.UserBase", b =>
                 {
-                    b.HasOne("Chess.Models.Entities.LobbyConfig", "Lobby")
+                    b.HasOne("Chess.Models.Entities.LobbyConfig", null)
                         .WithMany("Players")
-                        .HasForeignKey("LobbyId");
-
-                    b.Navigation("Lobby");
+                        .HasForeignKey("LobbyConfigId");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.Vote", b =>
@@ -298,33 +297,18 @@ namespace Chess.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("LobbyId");
 
-                    b.HasOne("Chess.Models.Entities.Move", "Move")
-                        .WithMany()
-                        .HasForeignKey("MoveId");
-
                     b.HasOne("Chess.Models.Entities.UserBase", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Lobby");
 
-                    b.Navigation("Move");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Chess.Models.Entities.Move", b =>
-                {
-                    b.HasOne("Chess.Models.Entities.UserBase", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.Lobby", b =>
                 {
-                    b.Navigation("Tiles");
+                    b.Navigation("Moves");
                 });
 
             modelBuilder.Entity("Chess.Models.Entities.LobbyConfig", b =>

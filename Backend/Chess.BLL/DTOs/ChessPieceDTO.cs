@@ -1,19 +1,18 @@
 ﻿using Chess.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Models.Entities
+namespace Chess.BLL.DTOs
 {
-    public class PieceLocation : TableSpace
+    public class ChessPieceDTO
     {
-        public Lobby Lobby { get; set; }
-
         public ChessPieceType Type { get; set; }
 
-        public Side Color { get; set; }
+        public Side Side { get; set; }
+
+        public string IconUrl { get; set; }
     }
 }

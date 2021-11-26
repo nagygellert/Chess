@@ -8,10 +8,10 @@ namespace Chess.BLL.DTOs
 {
     public class MoveDTO
     {
-        public TableSpaceDTO From { get; set; }
+        public TileDTO From { get; set; }
 
-        public TableSpaceDTO To { get; set; }
+        public TileDTO To { get; set; }
 
-        public int Piece { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

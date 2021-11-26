@@ -1,15 +1,30 @@
 <div class="d-flex justify-content-between p-3">
-    <app-chat></app-chat>
-    <div *ngIf='this.lobbyConfig' class="d-flex flex-column">
-        <h1>Your room code is</h1>
-        <h1 class="align-self-center m-2">{{this.lobbyConfig.roomCode}}</h1>
-        <button mat-raised-button color="primary" class="mt-auto">Start game</button>
+    <app-chat class="flex-shrink-1" [lobbyName]='this.lobbyName'></app-chat>
+    <div *ngIf='this.lobbyConfig' class="d-flex flex-column flex-grow-1 m-3">
+        <h1 class="align-self-center">{{this.lobbyConfig.name}}</h1>
+        <ng-container *ngIf='this.lobbyConfig.gameStarted' class="align-self-center">
+            <mat-icon class="material-icons-outlined py-2">
+                timer
+            </mat-icon>
+            <div class="py-2">
+                {{remainingTime$ | async}}
+            </div>
+        </ng-container>
+        <button mat-raised-button color="primary" routerLink='/join' class="mt-3">Leave lobby</button>
+        <button mat-raised-button *ngIf='this.user.id === this.lobbyConfig.owner.id && !this.lobbyConfig.gameStarted' 
+            color="primary" class="mt-auto" (click)='startGame()'>Start game</button>
+        <ng-container *ngIf='this.lobbyConfig.gameStarted'>
+            <app-chess-table (vote)='castVote($event)' [side]='this.playerSide' [canVote]='this.canVote' [moves]='this.moves'></app-chess-table>
+        </ng-container>
     </div>
-    <div *ngIf='!this.lobbyConfig' class="d-flex flex-column">
-        <button mat-raised-button color="primary" class="mt-auto" (click)='createLobby()'>Create Lobby</button>
+    <div class="flex-column flex-shrink-1" *ngIf='!this.lobbyConfig.gameStarted'>
+        <app-player-list class="p-2" title='White side' [players]='this.lobbyConfig?.whiteTeamPlayers ?? []'></app-player-list>
+        <button mat-icon-button (click)='swapPlayerSide()'>
+            <mat-icon>swap_vert</mat-icon>
+          </button>
+        <app-player-list class="p-2" title='Black side' [players]='this.lobbyConfig?.blackTeamPlayers ?? []'></app-player-list>
     </div>
-    <div class="flex-column">
-        <app-player-list class="p-2" title='White side' [players]='this.lobbyConfig?.players ?? []'></app-player-list>
-        <app-player-list class="p-2" title='Black side' [players]='this.lobbyConfig?.players ?? []'></app-player-list>
+    <div class="flex-column flex-shrink-1" *ngIf='this.lobbyConfig.gameStarted'>
+        <app-vote class="p-2" [votes]='this.votes'></app-vote>
     </div>
 </div>

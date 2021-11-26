@@ -12,6 +12,8 @@ namespace Chess.BLL.DTOs
 
         public int Round { get; set; }
 
-        public string LobbyId { get; set; }
+        public string LobbyName { get; set; }
+
+        public UserDTO User { get; set; }
     }
 }

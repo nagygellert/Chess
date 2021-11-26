@@ -9,10 +9,18 @@ namespace Chess.BLL.Interfaces
 {
     public interface ILobbyConfigService
     {
-        Task<LobbyConfigDTO> GetLobbyConfigByCode(int roomCode);
+        Task<LobbyConfigDTO> GetLobbyConfigByName(string name);
 
-        Task<LobbyConfigDTO> CreateLobbyConfig(UserDTO owner);
+        Task<IEnumerable<LobbyConfigDTO>> GetLobbyConfigs();
 
-        Task DeleteLobbyConfig(Guid id);
+        Task<LobbyConfigDTO> AddPlayerToLobby(UserDTO player, string roomName);
+
+        Task RemovePlayerFromLobby(Guid playerId);
+
+        Task<LobbyConfigDTO> CreateLobbyConfig(LobbyConfigDTO newLobby);
+
+        Task IncrementTurn(string lobbyName);
+
+        Task DeleteLobbyConfig(string name);
     }
 }

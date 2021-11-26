@@ -19,12 +19,20 @@ namespace Chess.DAL.Repositories.Services
             _chessDbContext = chessDbContext;
         }
 
-        public async Task<LobbyConfig> GetLobbyConfigByCode(int roomCode)
-            => await _chessDbContext.LobbyConfigs.FirstOrDefaultAsync(config => config.RoomCode == roomCode);
-
-        public async Task<IEnumerable<int>> GetExistingRoomCodes()
+        public async Task<IEnumerable<LobbyConfig>> GetLobbyConfigs()
         {
-            return await _chessDbContext.LobbyConfigs.Select(config => config.RoomCode).ToListAsync();
+            return await _chessDbContext.LobbyConfigs.Where(config => config.GameStarted == false).Include(lobby => lobby.Owner).ToListAsync();
+        }
+
+        public async Task<LobbyConfig> GetLobbyConfigByName(string name)
+        {
+            return await _chessDbContext.LobbyConfigs.Include(config => config.Owner)
+                                    .Include(config => config.Players).FirstOrDefaultAsync(config => config.Name == name);
+        }
+
+        public async Task<IEnumerable<string>> GetExistingRoomNames()
+        {
+            return await _chessDbContext.LobbyConfigs.Select(config => config.Name).ToListAsync();
         }
 
         public async Task<LobbyConfig> CreateLobbyConfig(LobbyConfig config)
@@ -34,10 +42,29 @@ namespace Chess.DAL.Repositories.Services
             return config;
         }
 
-        public async Task DeleteLobbyConfig(Guid id)
+        public async Task<LobbyConfig> GetLobbyConfigById(Guid Id)
         {
-            var lobbyToDelete = await _chessDbContext.LobbyConfigs.FindAsync(id);
-            _chessDbContext.Remove(lobbyToDelete);
+            return await _chessDbContext.LobbyConfigs.FindAsync(Id);
+        }
+
+        public async Task DeleteLobbyConfig(string roomName)
+        {
+            var lobbyToDelete = await _chessDbContext.LobbyConfigs.Where(room => room.Name == roomName).FirstOrDefaultAsync();
+            _chessDbContext.LobbyConfigs.Remove(lobbyToDelete);
+            await _chessDbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateLobbyConfig(string lobbyName, LobbyConfig config)
+        {
+            var configToUpdate = await _chessDbContext.LobbyConfigs.FirstOrDefaultAsync(config => config.Name == lobbyName);
+            configToUpdate = config;
+            _chessDbContext.LobbyConfigs.Update(configToUpdate);
+            await _chessDbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetCurrentRound(string lobbyName)
+        {
+            return (await _chessDbContext.LobbyConfigs.Select(config => new { config.Name, config.Round }).FirstOrDefaultAsync(config => config.Name == lobbyName)).Round;
         }
     }
 }

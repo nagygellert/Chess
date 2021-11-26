@@ -9,8 +9,14 @@ namespace Chess.DAL.Repositories.Interfaces
 {
     public interface IVoteRepository
     {
-        Task<IEnumerable<Vote>> GetVotesForLobby(Guid lobbyId);
+        Task<IEnumerable<Vote>> GetVotesForLobby(string lobbyName, int round);
 
-        Task<Vote> InsertVote(Vote vote); 
+        Task<Vote> GetVoteForUser(Guid userId);
+
+        Task<Vote> InsertVote(Vote vote);
+
+        Task<Vote> UpdateVote(Guid userId, Vote vote);
+
+        Task DeleteVote(Guid id);
     }
 }

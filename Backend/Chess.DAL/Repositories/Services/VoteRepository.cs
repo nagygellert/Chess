@@ -19,12 +19,36 @@ namespace Chess.DAL.Repositories.Services
             _chessDbContext = chessDbContext;
         }
 
-        public async Task<IEnumerable<Vote>> GetVotesForLobby(Guid lobbyId)
-            => await _chessDbContext.Votes.Where(vote => vote.Lobby.Id == lobbyId).ToListAsync();
+        public async Task DeleteVote(Guid id)
+        {
+            var vote = await _chessDbContext.Votes.FindAsync(id);
+            _chessDbContext.Votes.Remove(vote);
+            await _chessDbContext.SaveChangesAsync();
+        }
+
+        public async Task<Vote> GetVoteForUser(Guid userId)
+        {
+            return await _chessDbContext.Votes.FirstOrDefaultAsync(vote => vote.User.Id == userId);
+        }
+
+        public async Task<IEnumerable<Vote>> GetVotesForLobby(string lobbyName, int round)
+        {
+            return await _chessDbContext.Votes.Where(vote => vote.Lobby.LobbyConfig.Name == lobbyName && vote.Round == round).Include(vote => vote.User).ToListAsync();
+        }
+            
         
         public async Task<Vote> InsertVote(Vote vote)
         {
             await _chessDbContext.Votes.AddAsync(vote);
+            await _chessDbContext.SaveChangesAsync();
+            return vote;
+        }
+
+        public async Task<Vote> UpdateVote(Guid userId, Vote vote)
+        {
+            var userVote = await _chessDbContext.Votes.FirstOrDefaultAsync(vote => vote.User.Id == userId);
+            userVote = vote;
+            await _chessDbContext.SaveChangesAsync();
             return vote;
         }
     }

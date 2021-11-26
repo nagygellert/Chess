@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Chess.Models\Chess.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EntityConfigurations\" />
-  </ItemGroup>
-
 </Project>

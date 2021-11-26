@@ -20,15 +20,6 @@ namespace Chess.API.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var user = await _userService.GetAllUser();
-            return Ok(user);
-        }
-
         [HttpGet]
         [Route("registered/{id}")]
         public async Task<IActionResult> GetRegisteredAccount(Guid id)
@@ -45,21 +36,26 @@ namespace Chess.API.Controllers
             return Ok(createdUser);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("temporary/{id}")]
         public async Task<IActionResult> GetTemporaryAccount(Guid id)
         {
-            var user = await _userService.GetTemporaryUser(id);
+            var user = await _userService.GetUser(id);
             return Ok(user);
         }
 
-        [AllowAnonymous]
+        [HttpPost]
+        [Route("swap/{id}")]
+        public async Task<IActionResult> SwapSides(Guid id)
+        {
+            var user = await _userService.SwapSides(id);
+            return Ok(user);
+        }
+
         [HttpPost]
         [Route("temporary")]
-        public async Task<IActionResult> CreateTemporaryAccount([FromQuery] int roomCode, TemporaryUserDTO temporaryUser)
+        public async Task<IActionResult> CreateTemporaryAccount(UserDTO temporaryUser)
         {
-            temporaryUser.LobbyCode = roomCode;
             var createdUser = await _userService.CreateTemporaryUser(temporaryUser);
             return Ok(createdUser);
         }

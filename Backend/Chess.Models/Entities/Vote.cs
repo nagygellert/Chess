@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,13 @@ namespace Chess.Models.Entities
 {
     public class Vote : EntityBase 
     {
-        public Move Move { get; set; }
+        public int Row { get; set; }
+
+        public TableColumn Column { get; set; }
+
+        public int NewRow { get; set; }
+
+        public TableColumn NewColumn { get; set; }
 
         public int Round { get; set; }
 

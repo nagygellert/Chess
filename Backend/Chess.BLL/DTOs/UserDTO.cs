@@ -15,6 +15,10 @@ namespace Chess.BLL.DTOs
 
         public string Sub { get; set; }
 
+        public AccountType AccountType { get; set; }
+
+        public string LobbyName { get; set; }
+
         public Side? Side { get; set; }
     }
 }

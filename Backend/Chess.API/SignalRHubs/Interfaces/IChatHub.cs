@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chess.API.SignalRHubs
+namespace Chess.API.SignalRHubs.Interfaces
 {
     public interface IChatHub
     {
-        Task SetMessages(ChatMessageDTO messages);
+        Task SetMessages(IEnumerable<ChatMessageDTO> chatMessages);
 
+        Task SetMessage(ChatMessageDTO chatMessage);
     }
 }

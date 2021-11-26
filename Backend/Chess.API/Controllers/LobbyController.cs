@@ -23,42 +23,40 @@ namespace Chess.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLobby([FromBody] UserDTO lobbyOwner)
+        public async Task<IActionResult> CreateLobby([FromBody] LobbyConfigDTO newLobby)
         {
-            var allMsg = await _lobbyConfigService.CreateLobbyConfig(lobbyOwner);
+            var allMsg = await _lobbyConfigService.CreateLobbyConfig(newLobby);
             return Ok(allMsg);
         }
 
-        [AllowAnonymous]
         [HttpGet]
-        [Route("{roomCode}/config")]
-        public async Task<IActionResult> GetLobbyConfig(int roomCode)
+        public async Task<IActionResult> GetLobbies()
         {
-            var config = await _lobbyConfigService.GetLobbyConfigByCode(roomCode);
-            return Ok(config);
+            var allMsg = await _lobbyConfigService.GetLobbyConfigs();
+            return Ok(allMsg);
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetLobbyState(Guid id)
+        [Route("{name}/config")]
+        public async Task<IActionResult> GetLobbyConfig(string name)
         {
-            var msg = await _lobbyService.GetTableState(id);
-            return Ok(msg);
+            var config = await _lobbyConfigService.GetLobbyConfigByName(name);
+            return Ok(config);
+        }
+
+        [HttpDelete]
+        [Route("{name}")]
+        public async Task<IActionResult> DeleteLobbyConfig(string name)
+        {
+            await _lobbyConfigService.DeleteLobbyConfig(name);
+            return NoContent();
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteLobby(Guid id)
+        public async Task<IActionResult> DeleteLobby(string name)
         {
-            await _lobbyService.DeleteLobby(id);
-            return NoContent();
-        }
-
-        [HttpPost]
-        [Route("/move")]
-        public async Task<IActionResult> PostMove(Guid id, MoveDTO move)
-        {
-            await _lobbyService.InsertMove(id, move);
+            await _lobbyService.DeleteLobby(name);
             return NoContent();
         }
     }
