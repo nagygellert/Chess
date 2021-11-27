@@ -11,12 +11,6 @@ namespace Chess.BLL.Interfaces
     {
         Task<IEnumerable<MoveDTO>> GetTableMoves(string lobbyName);
 
-        Task<IEnumerable<TileDTO>> CreateLobby(string lobbyName);
-
-        IEnumerable<TileDTO> GenerateDefaultBoard();
-
-        Task InsertMove(string lobbyName, MoveDTO moveId);
-
-        Task DeleteLobby(string lobbyName);
+        Task CreateLobby(string lobbyName);
     }
 }

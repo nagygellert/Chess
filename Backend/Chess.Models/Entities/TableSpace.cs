@@ -12,5 +12,7 @@ namespace Chess.Models.Entities
         public TableColumn Column { get; set; }
 
         public int Row { get; set; }
+
+        public ChessPieceType PieceType { get; set; }
     }
 }

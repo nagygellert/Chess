@@ -11,5 +11,9 @@ namespace Chess.Models.Entities
         public LobbyConfig LobbyConfig { get; set; }
 
         public IEnumerable<Move> Moves { get; set; }
+
+        public IEnumerable<ChatMessage> Messages { get; set; }
+
+        public IEnumerable<Vote> Votes { get; set; }
     }
 }

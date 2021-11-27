@@ -15,18 +15,11 @@ namespace Chess.API.SignalRHubs.Services
     public class LobbyListHub : Hub<ILobbyListHub>
     {
         private const string LobbyGroup = "LobbySearchGroup";
-        private const string _suffix = "Lobby";
         private readonly ILobbyConfigService _lobbyConfigService;
-        private readonly ILobbyConfigRepository _lobbyConfigRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
 
-        public LobbyListHub(ILobbyConfigService lobbyConfigService, IUserRepository userRepository, ILobbyConfigRepository lobbyConfigRepository, IMapper mapper)
+        public LobbyListHub(ILobbyConfigService lobbyConfigService)
         {
             _lobbyConfigService = lobbyConfigService;
-            _userRepository = userRepository;
-            _lobbyConfigRepository = lobbyConfigRepository;
-            _mapper = mapper;
         }
 
         public async Task EnterLobbySearch()

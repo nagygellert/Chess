@@ -15,7 +15,6 @@ namespace Chess.API.SignalRHubs.Services
     public class LobbyHub : Hub<ILobbyHub>
     {
         private const string _suffix = "Lobby";
-        private const string LobbyGroup = "LobbySearchGroup";
         private readonly ILobbyConfigService _lobbyConfigService;
         private readonly IUserService _userService;
         private readonly ILobbyService _lobbyService;
@@ -67,9 +66,8 @@ namespace Chess.API.SignalRHubs.Services
 
         public async Task StartGame(string lobbyName)
         {
-            var board = await _lobbyService.CreateLobby(lobbyName);
+            await _lobbyService.CreateLobby(lobbyName);
             var lobbyConfig = await _lobbyConfigService.GetLobbyConfigByName(lobbyName);
-            //await Clients.Group($"{lobbyName}{_suffix}").SetBoard(board);
             await Clients.Group($"{lobbyName}{_suffix}").SetLobby(lobbyConfig);
             RecurringJob.AddOrUpdate<LobbyHub>($"{lobbyName}update", (lobby) => lobby.RoundEnded(lobbyName), "*/20 * * * * *");
         }
@@ -98,7 +96,6 @@ namespace Chess.API.SignalRHubs.Services
             else 
                 await Clients.Group($"{user.LobbyName}{_suffix}").PlayerLeft(user);
             await _lobbyConfigService.RemovePlayerFromLobby(userId);
-            //await Clients.Group($"{user.LobbyName}{_suffix}").SetLobby(lobby);
             await base.OnDisconnectedAsync(exception);
         }
     }

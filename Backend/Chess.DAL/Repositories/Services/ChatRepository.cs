@@ -20,7 +20,7 @@ namespace Chess.DAL.Repositories.Services
         }
 
         public async Task<IEnumerable<ChatMessage>> GetMessagesForLobby(string lobbyName)  
-            => await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Name == lobbyName).Include(msg => msg.User).ToListAsync();
+            => await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.LobbyConfig.Name == lobbyName).Include(msg => msg.User).ToListAsync();
         
         public async Task<ChatMessage> InsertOneAsync(ChatMessage msg)
         {
@@ -31,7 +31,7 @@ namespace Chess.DAL.Repositories.Services
 
         public async Task DeleteMessagesForLobby(string lobbyName)
         {
-            var messagesToDelete = await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.Name == lobbyName).ToListAsync();
+            var messagesToDelete = await _chessDbContext.ChatMessages.Where(msg => msg.Lobby.LobbyConfig.Name == lobbyName).ToListAsync();
             _chessDbContext.ChatMessages.RemoveRange(messagesToDelete);
             await _chessDbContext.SaveChangesAsync();
         }

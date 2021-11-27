@@ -31,22 +31,6 @@ namespace Chess.DAL.Repositories.Services
             return lobby;
         }
 
-        public async Task<Lobby> InsertMoveReference(Guid lobbyId, Guid moveId)
-        {
-            //    var lobby = await _lobbyCollection.Find(lobby => lobby.Id == lobbyId).FirstOrDefaultAsync();
-            //    //var updatedMoves = lobby.MoveIds.Append(moveId);
-            //    var update = Builders<Lobby>.Update.Set(nameof(lobby.MoveIds), updatedMoves);
-            //    await _lobbyCollection.UpdateOneAsync(lobby => lobby.Id == lobbyId, update);
-            //    return lobby;
-            throw new NotImplementedException();
-        }
-
-        public Lobby UpdateLobby(Lobby lobby)
-        {
-            _chessDbContext.Lobbies.Update(lobby);
-            return lobby;
-        }
-
         public async Task DeleteLobby(string lobbyName)
         {
             var lobbyToDelete = await _chessDbContext.Lobbies.FirstOrDefaultAsync(lobby => lobby.LobbyConfig.Name == lobbyName);

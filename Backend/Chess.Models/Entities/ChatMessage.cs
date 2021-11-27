@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 
 namespace Chess.Models.Entities
 {
@@ -10,6 +8,6 @@ namespace Chess.Models.Entities
 
         public string Text { get; set; }
 
-        public LobbyConfig Lobby { get; set; }
+        public Lobby Lobby { get; set; }
     }
 }

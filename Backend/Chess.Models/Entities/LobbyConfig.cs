@@ -23,7 +23,5 @@ namespace Chess.Models.Entities
         public bool GameStarted { get; set; }
 
         public string Password { get; set; }
-
-        public DateTime RoundStart { get; set; }
     }
 }

@@ -14,7 +14,6 @@ namespace Chess.API.SignalRHubs.Services
     {
         private const string _suffix = "Chat";
         private readonly IChatService _chatService;
-        private readonly IMapper _mapper;
 
         public ChatHub(IChatService chatService)
         {

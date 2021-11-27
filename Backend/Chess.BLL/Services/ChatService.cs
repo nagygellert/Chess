@@ -2,10 +2,7 @@
 using Chess.BLL.Interfaces;
 using Chess.Models.Entities;
 using Chess.DAL.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 
@@ -15,15 +12,15 @@ namespace Chess.BLL.Services
     {
         private readonly IChatRepository _chatRepository;
         private readonly IUserRepository _userRepository;
-        private readonly ILobbyConfigRepository _lobbyConfigRepository;
+        private readonly ILobbyRepository _lobbyRepository;
         private readonly IMapper _mapper;
 
-        public ChatService(IChatRepository chatRepository, IUserRepository userRepository, IMapper mapper, ILobbyConfigRepository lobbyConfigRepository)
+        public ChatService(IChatRepository chatRepository, IUserRepository userRepository, IMapper mapper, ILobbyRepository lobbyRepository)
         {
             _chatRepository = chatRepository;
             _userRepository = userRepository;
             _mapper = mapper;
-            _lobbyConfigRepository = lobbyConfigRepository;
+            _lobbyRepository = lobbyRepository;
         }
 
         public async Task<IEnumerable<ChatMessageDTO>> GetRoomMessages(string roomName)
@@ -36,7 +33,7 @@ namespace Chess.BLL.Services
         {
             var mappedMessage = _mapper.Map<ChatMessage>(chatMessage);
             mappedMessage.User = await _userRepository.GetUser(chatMessage.User.Id);
-            mappedMessage.Lobby = await _lobbyConfigRepository.GetLobbyConfigByName(roomName);
+            mappedMessage.Lobby = await _lobbyRepository.GetLobbyByName(roomName);
             var inserted = await _chatRepository.InsertOneAsync(mappedMessage);
             return _mapper.Map<ChatMessageDTO>(inserted);
         }

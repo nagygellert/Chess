@@ -15,10 +15,6 @@ namespace Chess.DAL.Repositories.Interfaces
 
         Task<Lobby> InsertLobby(Lobby lobby);
 
-        Task<Lobby> InsertMoveReference(Guid lobbyId, Guid moveId);
-
-        Lobby UpdateLobby(Lobby lobby);
-
         Task DeleteLobby(string lobbyName);
     }
 }

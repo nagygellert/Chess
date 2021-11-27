@@ -29,8 +29,6 @@ export class StartingMenuComponent implements OnInit {
         });
           this.isSignedIn = true;
       }
-      else 
-        this.isSignedIn = false;
     })
   }
 
@@ -45,8 +43,8 @@ export class StartingMenuComponent implements OnInit {
       if (result) {
         var newUser = new UserData(result);
         this.chessApiService.addTemporaryUser(newUser).subscribe((user: UserData) => {
-        this.cookieService.set('user', btoa(JSON.stringify(user)));
-        })
+        this.cookieService.set('user', btoa(JSON.stringify(user)), 1);
+        });
         this.isSignedIn = true;
       }
     });
