@@ -16,13 +16,11 @@ namespace Chess.BLL.Services
     {
         private readonly ILobbyRepository _lobbyRepository;
         private readonly ILobbyConfigRepository _lobbyConfigRepository;
-        private readonly IMoveRepository _moveRepository;
         private readonly IMapper _mapper;
 
-        public LobbyService(ILobbyRepository lobbyRepository, IMoveRepository moveRepository, IMapper mapper, ILobbyConfigRepository lobbyConfigRepository)
+        public LobbyService(ILobbyRepository lobbyRepository, IMapper mapper, ILobbyConfigRepository lobbyConfigRepository)
         {
             _lobbyRepository = lobbyRepository;
-            _moveRepository = moveRepository;
             _mapper = mapper;
             _lobbyConfigRepository = lobbyConfigRepository;
         }

@@ -36,16 +36,6 @@ namespace Chess.BLL.MapperProfiles
             CreateMap<Vote, Move>()
                 .ReverseMap();
 
-
-            /*CreateMap<TileDTO, PieceLocation>()
-                .ForPath(dest => dest.Color, opt => opt.MapFrom(src => src.ChessPiece.Side))
-                .ForMember(dest => dest.Column, opt => opt.MapFrom(src => src.Column))
-                .ForMember(dest => dest.Row, opt => opt.MapFrom(src => src.Row))
-                .ForPath(dest => dest.Type, opt => opt.MapFrom(src => src.ChessPiece.Type))
-                .ReverseMap();*/
-
-
-
             CreateMap<UserDTO, UserBase>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
 

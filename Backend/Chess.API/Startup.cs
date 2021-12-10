@@ -89,6 +89,9 @@ namespace Chess
             services.AddSignalR(options =>
             {
                 options.EnableDetailedErrors = true;
+                options.HandshakeTimeout = TimeSpan.FromSeconds(60);
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+                options.MaximumParallelInvocationsPerClient = 5000;
             });
 
             services.AddControllers();

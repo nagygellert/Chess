@@ -27,7 +27,6 @@ namespace IdentityServerAspNetIdentity
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
-                // interactive ASP.NET Core MVC client
                 new Client
                 {
                     ClientId = "chessAngular",

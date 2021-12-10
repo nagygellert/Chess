@@ -74,35 +74,59 @@ export class ChessTableComponent implements OnInit, OnChanges {
 
   initBoard(): void {
     this.board = [];
-    this.board.push(new Tile(8, Column.A, new ChessPiece(PieceType.Rook, Side.White, this.assetBaseUrl + "/white-rook.svg")),
-    new Tile(8, Column.B, new ChessPiece(PieceType.Knight, Side.White, this.assetBaseUrl + "/white-knight.svg")),
-    new Tile(8, Column.C, new ChessPiece(PieceType.Bishop, Side.White, this.assetBaseUrl + "/white-bishop.svg")),
-    new Tile(8, Column.D, new ChessPiece(PieceType.Queen, Side.White, this.assetBaseUrl + "/white-queen.svg")),
-    new Tile(8, Column.E, new ChessPiece(PieceType.King, Side.White, this.assetBaseUrl + "/white-king.svg")),
-    new Tile(8, Column.F, new ChessPiece(PieceType.Bishop, Side.White, this.assetBaseUrl + "/white-bishop.svg")),
-    new Tile(8, Column.G, new ChessPiece(PieceType.Knight, Side.White, this.assetBaseUrl + "/white-knight.svg")),
-    new Tile(8, Column.H, new ChessPiece(PieceType.Rook, Side.White, this.assetBaseUrl + "/white-rook.svg")));
+    this.board.push(new Tile(9, 0));
     this.columns.forEach((col: Column) => {
-      this.board.push(new Tile(7, col, new ChessPiece(PieceType.Pawn, Side.White, this.assetBaseUrl + "/white-pawn.svg")));
+      this.board.push(new Tile(9, col));
     })
+    this.board.push(new Tile(9, 9));
+    this.board.push(new Tile(8, 0));
+    this.board.push(new Tile(8, Column.A, new ChessPiece(PieceType.Rook, Side.Black, this.assetBaseUrl + "/black-rook.svg")),
+    new Tile(8, Column.B, new ChessPiece(PieceType.Knight, Side.Black, this.assetBaseUrl + "/black-knight.svg")),
+    new Tile(8, Column.C, new ChessPiece(PieceType.Bishop, Side.Black, this.assetBaseUrl + "/black-bishop.svg")),
+    new Tile(8, Column.D, new ChessPiece(PieceType.Queen, Side.Black, this.assetBaseUrl + "/black-queen.svg")),
+    new Tile(8, Column.E, new ChessPiece(PieceType.King, Side.Black, this.assetBaseUrl + "/black-king.svg")),
+    new Tile(8, Column.F, new ChessPiece(PieceType.Bishop, Side.Black, this.assetBaseUrl + "/black-bishop.svg")),
+    new Tile(8, Column.G, new ChessPiece(PieceType.Knight, Side.Black, this.assetBaseUrl + "/black-knight.svg")),
+    new Tile(8, Column.H, new ChessPiece(PieceType.Rook, Side.Black, this.assetBaseUrl + "/black-rook.svg")));
+    this.board.push(new Tile(8, 9));
+    this.board.push(new Tile(7, 0));
+    this.columns.forEach((col: Column) => {
+      this.board.push(new Tile(7, col, new ChessPiece(PieceType.Pawn, Side.Black, this.assetBaseUrl + "/black-pawn.svg")));
+    })
+    this.board.push(new Tile(7, 9));
     for (let row = 6; row > 2; row--) {
+      this.board.push(new Tile(row, 0));
       this.columns.forEach((col: Column) => {
         this.board.push(new Tile(row, col));
       });
+      this.board.push(new Tile(row, 9));
     }
+    this.board.push(new Tile(2, 0));
     this.columns.forEach((col: Column) => {
-      this.board.push(new Tile(2, col, new ChessPiece(PieceType.Pawn, Side.Black, this.assetBaseUrl + "/black-pawn.svg")));
+      this.board.push(new Tile(2, col, new ChessPiece(PieceType.Pawn, Side.White, this.assetBaseUrl + "/white-pawn.svg")));
     })
-    this.board.push(new Tile(1, Column.A, new ChessPiece(PieceType.Rook, Side.Black, this.assetBaseUrl + "/black-rook.svg")),
-    new Tile(1, Column.B, new ChessPiece(PieceType.Knight, Side.Black, this.assetBaseUrl + "/black-knight.svg")),
-    new Tile(1, Column.C, new ChessPiece(PieceType.Bishop, Side.Black, this.assetBaseUrl + "/black-bishop.svg")),
-    new Tile(1, Column.D, new ChessPiece(PieceType.Queen, Side.Black, this.assetBaseUrl + "/black-queen.svg")),
-    new Tile(1, Column.E, new ChessPiece(PieceType.King, Side.Black, this.assetBaseUrl + "/black-king.svg")),
-    new Tile(1, Column.F, new ChessPiece(PieceType.Bishop, Side.Black, this.assetBaseUrl + "/black-bishop.svg")),
-    new Tile(1, Column.G, new ChessPiece(PieceType.Knight, Side.Black, this.assetBaseUrl + "/black-knight.svg")),
-    new Tile(1, Column.H, new ChessPiece(PieceType.Rook, Side.Black, this.assetBaseUrl + "/black-rook.svg")));
-    if (this.side == Side.White)
-      this.board = this.board.reverse();
+    this.board.push(new Tile(2, 9));
+    this.board.push(new Tile(1, 0));
+    this.board.push(new Tile(1, Column.A, new ChessPiece(PieceType.Rook, Side.White, this.assetBaseUrl + "/white-rook.svg")),
+    new Tile(1, Column.B, new ChessPiece(PieceType.Knight, Side.White, this.assetBaseUrl + "/white-knight.svg")),
+    new Tile(1, Column.C, new ChessPiece(PieceType.Bishop, Side.White, this.assetBaseUrl + "/white-bishop.svg")),
+    new Tile(1, Column.D, new ChessPiece(PieceType.Queen, Side.White, this.assetBaseUrl + "/white-queen.svg")),
+    new Tile(1, Column.E, new ChessPiece(PieceType.King, Side.White, this.assetBaseUrl + "/white-king.svg")),
+    new Tile(1, Column.F, new ChessPiece(PieceType.Bishop, Side.White, this.assetBaseUrl + "/white-bishop.svg")),
+    new Tile(1, Column.G, new ChessPiece(PieceType.Knight, Side.White, this.assetBaseUrl + "/white-knight.svg")),
+    new Tile(1, Column.H, new ChessPiece(PieceType.Rook, Side.White, this.assetBaseUrl + "/white-rook.svg")));
+    this.board.push(new Tile(1, 9));
+    this.board.push(new Tile(0, 0));
+    this.columns.forEach((col: Column) => {
+      this.board.push(new Tile(0, col));
+    })
+    this.board.push(new Tile(0, 9));
+    console.log(this.board);
+    this.board.forEach((tile) => {
+      console.log(tile.row > 8 || tile.row < 1 || tile.column < 1 || tile.column > 8);
+    })
+    /*if (this.side == Side.Black)
+      this.board = this.board.reverse();*/
   }
 
   ngOnInit(): void {

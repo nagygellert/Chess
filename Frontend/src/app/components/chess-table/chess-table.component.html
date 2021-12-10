@@ -1,18 +1,27 @@
-<mat-grid-list cols="8" rowHeight="1:1">
+<mat-grid-list cols="10" rowHeight="1:1">
     <ng-container *ngFor='let tile of board'>
-        <ng-container *ngIf='this.clickedTile?.row != tile.row || this.clickedTile?.column != tile.column'>
+        <ng-container *ngIf='tile.row > 8 || tile.row < 1 || tile.column < 1 || tile.column > 8; else elseBlock'>
+            <mat-grid-tile *ngIf='(tile.row == 9 || tile.row == 0) && tile.column > 0 && tile.column < 9' class="white-tile">
+                {{tile.column | columnName}}
+            </mat-grid-tile>
+            <mat-grid-tile *ngIf='(tile.column == 9 || tile.column == 0) && tile.row > 0 && tile.row < 9' class="white-tile">
+                {{tile.row}}
+            </mat-grid-tile>
+            <mat-grid-tile *ngIf='(tile.column == 9 || tile.column == 0) && (tile.row == 0 || tile.row == 9)' class="white-tile">
+            </mat-grid-tile>
+        </ng-container>
+        <ng-template #elseBlock>
+            <mat-grid-tile (click)='tileClicked(tile)' class="clicked-tile" *ngIf='this.clickedTile?.row == tile.row && this.clickedTile?.column == tile.column; else block'>
+                <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
+            </mat-grid-tile>
+            <ng-template #block>
             <mat-grid-tile (click)='tileClicked(tile)' class="white-tile" *ngIf='(tile.column + tile.row) % 2 == 0'>
-                {{tile.column | columnName}}{{tile.row}}
                 <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
             </mat-grid-tile>
             <mat-grid-tile (click)='tileClicked(tile)' class="black-tile" *ngIf='(tile.column + tile.row) % 2 == 1'>
-                {{tile.column | columnName}}{{tile.row}}
                 <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
             </mat-grid-tile>
-        </ng-container>
-        <mat-grid-tile (click)='tileClicked(tile)' class="clicked-tile" *ngIf='this.clickedTile?.row == tile.row && this.clickedTile?.column == tile.column'>
-            {{tile.column | columnName}}{{tile.row}}
-            <img *ngIf='tile.chessPiece' src='{{tile.chessPiece?.iconUrl}}'/>
-        </mat-grid-tile>
+        </ng-template>
+    </ng-template>
     </ng-container>
 </mat-grid-list>

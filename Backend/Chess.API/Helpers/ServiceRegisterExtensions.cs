@@ -62,7 +62,6 @@ namespace Chess.API.Helpers
             services.AddScoped<IMoveRepository, MoveRepository>();
             services.AddScoped<IVoteRepository, VoteRepository>();
             services.AddScoped<ILobbyService, LobbyService>();
-            services.AddScoped<IMoveService, MoveService>();
             services.AddScoped<IVoteService, VoteService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();

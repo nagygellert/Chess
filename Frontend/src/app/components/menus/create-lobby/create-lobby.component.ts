@@ -33,13 +33,12 @@ export class CreateLobbyComponent implements OnInit {
       newLobby.password = this.password;
     newLobby.owner = JSON.parse(atob(this.cookieService.get('user'))) as UserData;
     this.chessApiService.createLobby(newLobby).subscribe((config: LobbyConfig) => {
-      if (config) {
+      if (!config) {
         var conn = this.chessWebsocket.getConnection("lobbylisthub");
         conn.start()
-        .then(() => conn.invoke('LobbyCreated'))
-        .finally(() => conn.stop());
-        this.cookieService.set('user', btoa(JSON.stringify(config.owner)));
-        this.router.navigate(['lobby', config.name]);
+        .then(() => conn.invoke('LobbyCreated', newLobby))
+        .finally(() => {conn.stop();  this.cookieService.set('user', btoa(JSON.stringify(newLobby.owner)));
+        this.router.navigate(['lobby', newLobby.name]);});
       }
       else {
         this.snackBar.open("A lobby with the given name already exists!", 'Ok', { duration : 5000 })
