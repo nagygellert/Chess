@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthenticatedResult, OidcSecurityService } from 'angular-auth-oidc-client';
 import { CookieService } from 'ngx-cookie-service';
 import { AccountType } from 'src/app/models/accountType';
 import { UserData } from 'src/app/models/userData';
@@ -15,21 +15,29 @@ import { TextInputDialogComponent } from '../../text-input-dialog/text-input-dia
 export class StartingMenuComponent implements OnInit {
 
   isSignedIn: boolean = false;
+  isAuthenticated: boolean = false;
   username: string = '';
 
   constructor(private oidcService: OidcSecurityService, private cookieService: CookieService,
-    public dialog: MatDialog, private chessApiService: ChessAPIService) { 
+    public dialog: MatDialog, private chessApiService: ChessAPIService) {
+    this.oidcService.isAuthenticated$.subscribe((auth: AuthenticatedResult) => this.isAuthenticated = auth.isAuthenticated); 
     this.oidcService.userData$.subscribe((userData) => {
-      console.log(userData.userData);
       if (userData.userData) {
         this.chessApiService.addRegisteredUser(userData.userData).subscribe((user: UserData) => {
           if (this.cookieService.check('user'))
             this.cookieService.delete('user');
           this.cookieService.set('user', btoa(JSON.stringify(user)));
         });
-          this.isSignedIn = true;
       }
     })
+    if (this.cookieService.check('user')) {
+      let userData = JSON.parse(atob(this.cookieService.get('user'))) as UserData;
+      if (userData.accountType && (userData.accountType == AccountType.Temporary || 
+        (userData.accountType == AccountType.Registered && this.oidcService.isAuthenticated)))
+        this.isSignedIn = true; 
+      else 
+        this.isSignedIn = false; 
+    }
   }
 
   openDialog(): void {

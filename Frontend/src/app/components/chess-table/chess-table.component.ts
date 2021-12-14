@@ -28,9 +28,7 @@ export class ChessTableComponent implements OnInit, OnChanges {
   pieceSelected: boolean = false;
   assetBaseUrl: string = `${environment.chessApiUrl}${environment.assetUrl}`;
 
-  constructor(private chessApiService: ChessAPIService) {
-    //this.initBoard();
-   }
+  constructor() {}
 
   tileClicked(tile: Tile): void {
     if (this.canVote) {
@@ -121,12 +119,8 @@ export class ChessTableComponent implements OnInit, OnChanges {
       this.board.push(new Tile(0, col));
     })
     this.board.push(new Tile(0, 9));
-    console.log(this.board);
-    this.board.forEach((tile) => {
-      console.log(tile.row > 8 || tile.row < 1 || tile.column < 1 || tile.column > 8);
-    })
-    /*if (this.side == Side.Black)
-      this.board = this.board.reverse();*/
+    if (this.side == Side.Black)
+      this.board = this.board.reverse();
   }
 
   ngOnInit(): void {

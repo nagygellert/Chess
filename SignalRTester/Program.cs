@@ -6,23 +6,22 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace SignalRTest
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var asd2 = new List<Task>();
+            var tasks = new List<Task>();
             for (int i = 0; i < int.Parse(args[0]); i++)
             {
-                Console.WriteLine($"task{i} elindult");
-                asd2.Add(Task.Run(asd));
+                Console.WriteLine($"Task {i} elindult");
+                tasks.Add(Task.Run(Test));
             }
-            //Parallel.For(0, int.Parse(args[0]), new ParallelOptions { MaxDegreeOfParallelism = 6 }, (i) => { asd(); Debug.WriteLine($"task{i} elindult"); });
-            Task.WaitAll(asd2.ToArray());
+            Task.WaitAll(tasks.ToArray());
         }
 
-        private async static Task asd()
+        private async static Task Test()
         {
             var connection = new HubConnectionBuilder()
                         .WithUrl(new Uri("https://localhost:44340/chathub"), options =>
@@ -36,15 +35,15 @@ namespace ConsoleApp1
             {
                 return Task.CompletedTask;
             };
-            connection.Reconnecting += async (asd) =>
+            connection.Reconnecting += async (Test) =>
             {
                 await connection.StopAsync();
             };
             await connection.StartAsync();
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            await connection.InvokeAsync("NewMessage", new ChatMessageDTO { Text = "SZIA BAZDMEG KUTYAIDAT SETALTATOD", User = new UserDTO { Id = new Guid("3cb0a7e1-0d4c-4236-1071-08d9967d6cc7") } }, "TesztLobby");
-            Console.WriteLine($"task vege {stopwatch.ElapsedMilliseconds} alatt");
+            await connection.InvokeAsync("NewMessage", new ChatMessageDTO { Text = "Tesztüzenet", User = new UserDTO { Id = new Guid("3cb0a7e1-0d4c-4236-1071-08d9967d6cc7") } }, "TesztLobby");
+            Console.WriteLine($"Task vége {stopwatch.ElapsedMilliseconds} alatt");
         }
     }
     public class ChatMessageDTO

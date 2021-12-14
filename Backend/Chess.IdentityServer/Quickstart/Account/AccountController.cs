@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using Chess.IdentityServer.Quickstart.Account;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
@@ -178,6 +177,10 @@ namespace IdentityServerHost.Quickstart.UI
         [HttpPost]
         public async Task<IActionResult> SignUp(SignUpInputModel accountDetails, string button)
         {
+            if (button == "cancel")
+            {
+                return Redirect("/");
+            }
             if (button == "create" && ModelState.IsValid)
             {
                 ApplicationUser applicationUser = new ApplicationUser
@@ -235,8 +238,7 @@ namespace IdentityServerHost.Quickstart.UI
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
             }
 
-            return Redirect(vm.PostLogoutRedirectUri);
-            //return View("LoggedOut", vm);
+            return Redirect(string.IsNullOrEmpty(vm.PostLogoutRedirectUri) ? "/" : vm.PostLogoutRedirectUri);
         }
 
         [HttpGet]
